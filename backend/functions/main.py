@@ -7,10 +7,14 @@
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
+from src.Autenticador.Autenticador import ProbarAuth
 
 initialize_app()
-#
-#
+
 @https_fn.on_request()
 def on_request_example(req: https_fn.Request) -> https_fn.Response:
     return https_fn.Response("Hello world!")
+
+@https_fn.on_request()
+def on_request_example2(req: https_fn.Request) -> https_fn.Response:
+    return https_fn.Response("Hello John!")
