@@ -2,10 +2,13 @@
 # To get started, simply uncomment the below code or create your own.
 # Deploy with `firebase deploy`
 
+# Todas las funciones que esten en este archivo seran las que despliegue firebase, importar cualquier
+# funcion que se vaya a usar aca
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
-# initialize_app()
+
+initialize_app()
 #
 #
 @https_fn.on_request()
