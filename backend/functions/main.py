@@ -8,6 +8,7 @@ from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
 from src.Autenticador.Autenticador import ProbarAuth
+from src.Storage.Storage import ProbarStorage
 
 initialize_app()
 
