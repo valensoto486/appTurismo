@@ -14,9 +14,11 @@ firebase_auth = firebaseConfig.firebase_auth
 
 # Se hizo una funcion de prueba para probar el autenticador de firebase
 @https_fn.on_request()
-def ProbarAuth(req: https_fn.Request) -> https_fn.Response:
+def ProbarAuth(request) -> https_fn.Response:
     try:
-        #firebase_auth.create_user(email="John", password="12345678")
-        return https_fn.Response("Hola desde el autenticador")
-    except Exception:
-        return https_fn.Response("Se cometio un error en la prueba del autenticador")
+        email = request.args.get("email")
+        password = request.args.get("password")
+        firebase_auth.create_user(email=email, password=password)
+        return https_fn.Response("Se creo el usuario")
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error en la autenticacion " + str(e))
