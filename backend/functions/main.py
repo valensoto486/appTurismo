@@ -12,6 +12,8 @@ import firebaseConfig
 from src.Autenticador.Autenticador import ProbarAuth
 from src.Storage.Storage import ProbarStorage
 
+from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
+
 
 @https_fn.on_request()
 def on_request_example(req: https_fn.Request) -> https_fn.Response:
@@ -21,3 +23,19 @@ def on_request_example(req: https_fn.Request) -> https_fn.Response:
 def on_request_param(request) -> https_fn.Response:
     nombre = request.args.get("nombre")
     return https_fn.Response("Hello " + nombre)
+
+@https_fn.on_request()
+def on_request_json(request) -> https_fn.Response:
+
+    if request.is_json:
+        parametros = request.get_json()
+    else:
+        return https_fn.Response('No hay JSON')
+
+    nombre = parametros.get('Nombre', 'NADA')
+
+    respuesta_json = {
+                'mensaje': f'Hola: {nombre}'
+            }
+
+    return https_fn.Response(response_data, mimetype='application/json')
