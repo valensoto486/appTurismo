@@ -13,20 +13,19 @@ ruta_config = os.path.join( ruta_archivo, '..', '..')
 sys.path.append( ruta_config )
 import firebaseConfig
 
-'''
-    Falta la conexion con firestore
-'''
-
 firebase_auth = firebaseConfig.firebase_auth
 firestore_db = firebaseConfig.firestore_db
 
 # Esta funcion crea un usuario en el autenticador y firestore
 # recibe el JSON: (nombre, correo, contraseña, rol)
+@https_fn.on_request()
 def CrearUsuario(request) -> https_fn.Response:
     try:
 
         if not request.is_json:
             return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
 
         nombre = parametros.get('nombre')
         correo = parametros.get('correo')
@@ -34,23 +33,23 @@ def CrearUsuario(request) -> https_fn.Response:
         rol = parametros.get('rol')
 
         # Crea el usuario en el autenticador y su informacion lo almacena en una variable
-        usuario = firebase_auth.create_user(email=nombre, password=contrasenia)
+        usuario = firebase_auth.create_user(email=correo, password=contrasenia)
 
         # Con el uid del usuario se crea un registro en firestore ligado a ese uid, con los atributos
         # especificados en el JSON nuevo_usuario
-        referencia = firestore.collection('Usuarios').document(usuario.uid)
+        referencia = firestore_db.collection('Usuarios').document(usuario.uid)
         
         nuevo_usuario = {
-            nombre: nombre,
-            tipo: rol,
+            "nombre": nombre,
+            "rol": rol,
         }
 
-        #referencia.set(nuevo_usuario)
+        referencia.set(nuevo_usuario)
 
         return https_fn.Response("Usuario creado correctamente")
        
     except Exception as e:
-        return https_fn.Response("Ocurrio un error creando el usuario " + str(e))
+        return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
 
 
 # Esta funcion es para autenticar al usuario
