@@ -18,6 +18,7 @@ import firebaseConfig
 '''
 
 firebase_auth = firebaseConfig.firebase_auth
+firestore_db = firebaseConfig.firestore_db
 
 # Esta funcion crea un usuario en el autenticador y firestore
 # recibe el JSON: (nombre, correo, contraseña, rol)
@@ -83,19 +84,21 @@ def AutenticarUsuario(request) -> https_fn.Response:
             data = response.json()
             uid = data['localId']
 
-            referencia = firestore.collection('Usuarios').document(uid)
+            referencia = firestore_db.collection('Usuarios').document(uid)
 
             usuario = referencia.get()
+
+
 
             # Se crea un JSON que devuelve el uid del usuario y el rol que este tiene en la aplicacion
             respuesta_json = {
                 'uid': uid,
-                'rol': usuario.rol
+                'rol': usuario.to_dict().get("rol")
             }
 
             return https_fn.Response(json.dumps(respuesta_json), mimetype='application/json')
         else:
-            return https_fn.Response('Error en la respuesta json: ' + json.dumps(response.json()))
+            return https_fn.Response('No encontro el usuario')
 
     except Exception as e:
         

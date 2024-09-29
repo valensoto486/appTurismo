@@ -4,7 +4,7 @@
 # Para usar correctamente esto se debe correr el comando ($ pip install firebase-admin)
 
 import firebase_admin
-from firebase_admin import credentials, auth, storage
+from firebase_admin import credentials, auth, storage, firestore
 
 try: 
 
@@ -15,6 +15,7 @@ try:
 
     # Aca van los servicios de firebase que se van a implementar (Storage, Auth, Firestore)  
     firebase_auth = firebase_admin.auth
+    firestore_db = firestore.client()
     firebase_storage = firebase_admin.storage.bucket()
 except Exception:
     print("Ocurrio un error conectando los servicios de firebase firebase en el backend")
