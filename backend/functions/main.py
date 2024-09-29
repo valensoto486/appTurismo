@@ -8,6 +8,7 @@ from firebase_functions import https_fn
 from firebase_admin import initialize_app
 
 import firebaseConfig
+import json
 
 from src.Autenticador.Autenticador import ProbarAuth
 from src.Storage.Storage import ProbarStorage
@@ -35,7 +36,8 @@ def on_request_json(request) -> https_fn.Response:
     nombre = parametros.get('Nombre', 'NADA')
 
     respuesta_json = {
-                'mensaje': f'Hola: {nombre}'
+                "mensaje": "Hola" + nombre,
+                "prueba": "hola"
             }
 
-    return https_fn.Response(response_data, mimetype='application/json')
+    return https_fn.Response(json.dumps(respuesta_json), mimetype='application/json')

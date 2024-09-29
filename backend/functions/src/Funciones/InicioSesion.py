@@ -4,6 +4,9 @@ from firebase_functions import https_fn
 # Se obtiene la ruta de este archivo, luego se devuelve dos carpetas y finalmente se accede al archivo
 import os
 import sys
+import json
+import requests
+import traceback
 
 ruta_archivo = os.path.dirname( __file__ )
 ruta_config = os.path.join( ruta_archivo, '..', '..')
@@ -34,7 +37,7 @@ def CrearUsuario(request) -> https_fn.Response:
 
         # Con el uid del usuario se crea un registro en firestore ligado a ese uid, con los atributos
         # especificados en el JSON nuevo_usuario
-        #referencia = firestore.collection('Usuarios').document(usuario.uid)
+        referencia = firestore.collection('Usuarios').document(usuario.uid)
         
         nuevo_usuario = {
             nombre: nombre,
@@ -51,12 +54,14 @@ def CrearUsuario(request) -> https_fn.Response:
 
 # Esta funcion es para autenticar al usuario
 # recibe el JSON: (correo, contraseña)
+@https_fn.on_request()
 def AutenticarUsuario(request) -> https_fn.Response:
     try:
 
         if not request.is_json:
             return https_fn.Response('No hay JSON')
 
+        parametros = request.get_json()
         # Los parametros son obtenidos y usados en un objeto JSON, que es enviado al autenticador para 
         # validarlos
         correo = parametros.get('correo')
@@ -71,7 +76,7 @@ def AutenticarUsuario(request) -> https_fn.Response:
             "returnSecureToken": True
         }
     
-        response = requests.post(url, json=payload)
+        response = requests.post(url, json=payload, headers={"Content-Type": "application/json"})
     
         # Si es exitosa la peticion, obtiene con el uid, el usuario de firestore que esta asociada a el
         if response.status_code == 200:
@@ -88,9 +93,11 @@ def AutenticarUsuario(request) -> https_fn.Response:
                 'rol': usuario.rol
             }
 
-            return https_fn.Response(respuesta_json, mimetype='application/json')
+            return https_fn.Response(json.dumps(respuesta_json), mimetype='application/json')
         else:
-            return https_fn.Response('Error en la respuesta json: ' + response.json())
+            return https_fn.Response('Error en la respuesta json: ' + json.dumps(response.json()))
 
     except Exception as e:
-        return https_fn.Response("Ocurrio un error creando el usuario " + str(e))
+        
+        return https_fn.Response("Ocurrio un error autenticando el usuario. " + str(e) + ": " + 
+            traceback.format_exc())
