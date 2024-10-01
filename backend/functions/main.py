@@ -14,7 +14,7 @@ from src.Autenticador.Autenticador import ProbarAuth
 from src.Storage.Storage import ProbarStorage
 
 from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
-from src.Funciones.Ubicaciones import CrearUbicacion
+from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion
 
 
 @https_fn.on_request()
