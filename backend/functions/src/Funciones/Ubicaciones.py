@@ -14,7 +14,8 @@ ruta_config = os.path.join( ruta_archivo, '..', '..')
 sys.path.append( ruta_config )
 import firebaseConfig
 
-firebase_auth = firebaseConfig.firebase_auth
+# Se traen los servicios que son necesarios
+
 firestore_db = firebaseConfig.firestore_db
 
 # [POST] Esta funcion se encargara de subir un sitio turistico en base a las indicaciones dadas
@@ -116,3 +117,25 @@ def ModificarUbicacion(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
+
+
+# [POST] Esta funcion se encargara de borrar un sitio turistico
+# Recibe un JSON con: (UUID)
+@https_fn.on_request()
+def EliminarUbicacion(request) -> https_fn.Response:
+    try:
+        
+        if not request.is_json:
+            return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
+
+        uuid = parametros.get('uuid')
+
+        ubicacion = firestore_db.collection('Lugares').document(uuid)
+        ubicacion.delete()
+
+        return https_fn.Response("Se elimino la ubicacion correctamente")
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error borrando la ubicacion: " + str(e))
