@@ -16,8 +16,8 @@ import firebaseConfig
 firebase_auth = firebaseConfig.firebase_auth
 firestore_db = firebaseConfig.firestore_db
 
-# Esta funcion crea un usuario en el autenticador y firestore
-# recibe el JSON: (nombre, correo, contraseña, rol)
+# [POST] Esta funcion crea un usuario en el autenticador y firestore
+# recibe el JSON: (nombre, correo, contrasenia, rol)
 @https_fn.on_request()
 def CrearUsuario(request) -> https_fn.Response:
     try:
@@ -52,7 +52,7 @@ def CrearUsuario(request) -> https_fn.Response:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
 
 
-# Esta funcion es para autenticar al usuario
+# [POST] Esta funcion es para autenticar al usuario
 # recibe el JSON: (correo, contraseña)
 @https_fn.on_request()
 def AutenticarUsuario(request) -> https_fn.Response:
@@ -86,8 +86,6 @@ def AutenticarUsuario(request) -> https_fn.Response:
             referencia = firestore_db.collection('Usuarios').document(uid)
 
             usuario = referencia.get()
-
-
 
             # Se crea un JSON que devuelve el uid del usuario y el rol que este tiene en la aplicacion
             respuesta_json = {
