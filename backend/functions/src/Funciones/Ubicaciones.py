@@ -69,7 +69,7 @@ def CrearUbicacion(request) -> https_fn.Response:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
 
 
-# [POST] Esta funcion se encargara de modificar un sitio turistico en base a las indicaciones dadas
+# [PUT] Esta funcion se encargara de modificar un sitio turistico en base a las indicaciones dadas
 # Recibe un JSON con: (Nombre, UUID, Tipo, Descripcion, Latitud, Longitud)
 @https_fn.on_request()
 def ModificarUbicacion(request) -> https_fn.Response:
@@ -119,7 +119,7 @@ def ModificarUbicacion(request) -> https_fn.Response:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
 
 
-# [POST] Esta funcion se encargara de borrar un sitio turistico
+# [DELETE] Esta funcion se encargara de borrar un sitio turistico
 # Recibe un JSON con: (UUID)
 @https_fn.on_request()
 def EliminarUbicacion(request) -> https_fn.Response:
