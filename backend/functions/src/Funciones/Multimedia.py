@@ -21,7 +21,7 @@ firestore_db = firebaseConfig.firestore_db
 firebase_storage = firebaseConfig.firebase_storage
 
 # [POST] este metodo sube un archivo multimedia a firebase
-# Recibe un archivo
+# Recibe un archivo file que sea: (jpg, png, mp4) y un json conocido como metadata con: (uuid Lugar)
 @https_fn.on_request()
 def SubirContenido(request) -> https_fn.Response:
     try:
@@ -40,8 +40,14 @@ def SubirContenido(request) -> https_fn.Response:
         metadatos = request.form['metadata']
         archivo = request.files['file']
 
+        # Se valida que el archivo tenga nombre y que sea de la extension adecuada
         if archivo.filename == '':
             return https_fn.Response("El archivo no tiene ningun nombre")
+
+        extension = archivo.filename.split(".")[1]
+
+        if not (extension == "jpg" or extension == "png" or extension == "mp4"):
+            return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png, mp4)")
 
         # Se hace una ubicacion nueva para que todos los archivos sean diferentes
         unique_id = str(uuid.uuid4())
