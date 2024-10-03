@@ -1,9 +1,16 @@
 import React from 'react'; 
-import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; // Asegúrate de incluir 'Link'
-import './App.css';
+import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
+import './styles/App.css';
 import InfoViajero from './InfoViajero';
 import Eventos from './Eventos';
-import Inicio from './Inicio'; // Importa el componente Inicio
+import Inicio from './Inicio'; 
+import miImagen from './styles/images/img1.jpg';
+import foto1 from './styles/images/img1.jpg'; 
+import foto2 from './styles/images/img1.jpg';
+import foto3 from './styles/images/img1.jpg';
+import foto4 from './styles/images/img1.jpg';
+import foto5 from './styles/images/img1.jpg';
+
 
 function App() {
   return (
@@ -15,16 +22,21 @@ function App() {
             <Link to="/" className="nav-link">Inicio</Link>
             <Link to="/Eventos" className="nav-link">Descubre el oriente</Link>
             <Link to="/InfoViajero" className="nav-link">Información al viajero</Link>
-            <Link to="/Eventos" className="nav-link">Eventos</Link>
           </nav>
         </header>
 
         {/* Imagen estática con frase y botón */}
-        <div className="image-container">
-          <img src="https://i.postimg.cc/pXxq4yK8/Whats-App-Image-2024-09-17-at-9-34-25-AM.jpg" alt="Banner" className="static-image" />
-          <div className="overlay">
-            <h2 className="overlay-text">Bienvenido al oriente antioqueño</h2>
-            <button className="login-button">Iniciar Sesión</button>
+        <div className="image-wrapper">
+          <div className="image-container">
+            <img
+              src={miImagen}
+              alt="Banner"
+              className="static-image"
+            />
+            <div className="overlay">
+              <h2 className="overlay-text">Bienvenido al oriente antioqueño</h2>
+              <button className="login-button">Iniciar Sesión</button>
+            </div>
           </div>
         </div>
         
@@ -33,6 +45,75 @@ function App() {
           <h2 className="text">Explora el mundo, pero no a costa del planeta. Viaja con conciencia, y descubre que el verdadero tesoro es la huella que dejas detras</h2>
           <h3 className="text">El turismo sostenible es una forma de viajar que equilibra la satisfacción de tus deseos de exploración con la necesidad de proteger el medio ambiente y respetar las culturas locales. Consiste en hacer elecciones conscientes que minimicen el impacto negativo en los destinos que visitas, como elegir alojamientos ecológicos, reducir el uso de plásticos y apoyar a empresas que promueven prácticas responsables. Así, tus viajes no solo enriquecen tu vida, sino que también contribuyen al bienestar de las comunidades y la conservación de los recursos naturales.</h3>
         </div>
+
+        {/* DESCUBRE EL ORIENTE son btn */}
+        <div className="gallery-container">
+          <h2 className="gallery-title">Descubre el Oriente Antioqueño </h2>
+          <div className="gallery">
+            <div className="gallery-item">
+              <button onClick={() => alert('Imagen 1 clickeada!')}>
+                <img src={foto1} alt="Foto 1" className="gallery-image" />
+              </button>
+              <h3 className="gallery-item-title">Rionegro</h3>
+            </div>
+            <div className="gallery-item">
+              <button onClick={() => alert('Imagen 2 clickeada!')}>
+                <img src={foto2} alt="Foto 2" className="gallery-image" />
+              </button>
+              <h3 className="gallery-item-title">La Union</h3>
+            </div>
+            <div className="gallery-item">
+              <button onClick={() => alert('Imagen 3 clickeada!')}>
+                <img src={foto3} alt="Foto 3" className="gallery-image" />
+              </button>
+              <h3 className="gallery-item-title">El Carmen de Viboral</h3>
+            </div>
+            <div className="gallery-item">
+              <button onClick={() => alert('Imagen 4 clickeada!')}>
+                <img src={foto4} alt="Foto 4" className="gallery-image" />
+              </button>
+              <h3 className="gallery-item-title">El Retiro</h3>
+            </div>
+            <div className="gallery-item">
+              <button onClick={() => alert('Imagen 5 clickeada!')}>
+                <img src={foto5} alt="Foto 5" className="gallery-image" />
+              </button>
+              <h3 className="gallery-item-title">La Ceja </h3>
+            </div>
+          </div>
+        </div>
+
+        {/* EVENTOS */}
+        <div className="eventos-container">
+          <h2 className="eventos-title">Eventos </h2>
+          <div className="eventos">
+            <div className="eventos-item">
+              <button onClick={() => alert('Imagen 1 clickeada!')}>
+                <img src={foto1} alt="Foto 1" className="eventos-image" />
+              </button>
+              <h3 className="eventos-item-title">Evento 0</h3>
+            </div>
+            <div className="eventos-item">
+              <button onClick={() => alert('Imagen 2 clickeada!')}>
+                <img src={foto2} alt="Foto 2" className="eventos-image" />
+              </button>
+              <h3 className="eventos-item-title">Evento 1</h3>
+            </div>
+            <div className="eventos-item">
+              <button onClick={() => alert('Imagen 3 clickeada!')}>
+                <img src={foto3} alt="Foto 3" className="eventos-image" />
+              </button>
+              <h3 className="eventos-item-title">Evento 2</h3>
+            </div>
+            <div className="eventos-item">
+              <button onClick={() => alert('Imagen 4 clickeada!')}>
+                <img src={foto4} alt="Foto 4" className="eventos-image" />
+              </button>
+              <h3 className="eventos-item-title">Evento 3</h3>
+            </div>
+          </div>
+        </div>
+
 
         <main>
           <Routes>
