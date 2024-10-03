@@ -67,3 +67,33 @@ def SubirContenido(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error subiendo el recurso: " + str(e))
+
+
+# [DELETE] este borra un archivo del storage
+# Recibe un JSON: (uuid_lugar, uuid_recurso)
+@https_fn.on_request()
+def EliminarContenido(request) -> https_fn.Response:
+    try:
+        # Se revisa y obtienen los campos del JSON
+        if not request.is_json:
+            return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
+
+        uuid_lugar = parametros.get('uuid_lugar')
+        uuid_recurso = parametros.get('uuid_recurso')
+
+        # Se obtienen las referencias del lugar y del archivo multimedia
+        lugar = firestore_db.collection('Lugares').document(uuid_lugar)
+        referencia = lugar.collection('Multimedia').document(uuid_recurso)
+
+        blob = firebase_storage.blob(uuid_recurso)
+        
+        # Se borra el archivo en storage y su url en firestore
+        referencia.delete()
+        blob.delete()
+
+        return https_fn.Response('El archivo se borro correctamente')
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error subiendo el recurso: " + str(e))
