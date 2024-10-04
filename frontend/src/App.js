@@ -5,11 +5,11 @@ import InfoViajero from './InfoViajero';
 import Eventos from './Eventos';
 import Inicio from './Inicio'; 
 import miImagen from './styles/images/img1.jpg';
-import foto1 from './styles/images/img1.jpg'; 
-import foto2 from './styles/images/img1.jpg';
-import foto3 from './styles/images/img1.jpg';
-import foto4 from './styles/images/img1.jpg';
-import foto5 from './styles/images/img1.jpg';
+import foto1 from './styles/images/Rionegro.jpg'; 
+import foto2 from './styles/images/LaUnion.jpg';
+import foto3 from './styles/images/ElCarmen.jpg';
+import foto4 from './styles/images/ElRetiro.jpg';
+import foto5 from './styles/images/LaCeja.jpg';
 
 
 function App() {
@@ -113,7 +113,7 @@ function App() {
             </div>
           </div>
         </div>
-
+          
 
         <main>
           <Routes>
