@@ -1,4 +1,4 @@
-import React from 'react'; 
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Route, Routes, Link } from 'react-router-dom'; 
 import './styles/App.css';
 import InfoViajero from './InfoViajero';
@@ -13,6 +13,17 @@ import foto5 from './styles/images/LaCeja.jpg';
 
 
 function App() {
+
+  const [isDropdownOpen, setDropdownOpen] = useState(false);
+
+  const handleMouseEnter = () => {
+    setDropdownOpen(true);
+  };
+
+  const handleMouseLeave = () => {
+    setDropdownOpen(false);
+  };
+
   return (
     <Router>
       <div className="App">
@@ -20,7 +31,24 @@ function App() {
           <h1>App Turismo</h1>
           <nav className="nav-bar">
             <Link to="/" className="nav-link">Inicio</Link>
-            <Link to="/Eventos" className="nav-link">Descubre el oriente</Link>
+            <div 
+              className="dropdown" 
+              onMouseEnter={handleMouseEnter} 
+              onMouseLeave={handleMouseLeave}
+            >
+              <span id="descubre-text">Descubre el oriente</span>
+              {isDropdownOpen && (
+                <ul className="dropdown-menu">
+                  <li><Link to="/rionegro" className="dropdown-item">Rionegro</Link></li>
+                  <li><Link to="/la-union" className="dropdown-item">La Unión</Link></li>
+                  <li><Link to="/el-carmen" className="dropdown-item">El Carmen de Viboral</Link></li>
+                  <li><Link to="/el-retiro" className="dropdown-item">El Retiro</Link></li>
+                  <li><Link to="/la-ceja" className="dropdown-item">La Ceja</Link></li>
+                </ul>
+              )}
+            </div>
+
+            <Link to="/Eventos" className="nav-link">Eventos</Link>
             <Link to="/InfoViajero" className="nav-link">Información al viajero</Link>
           </nav>
         </header>
