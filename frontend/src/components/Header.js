@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Header.css';
+import Eventos from '../pages/Eventos';
+import InformacionViajero from '../pages/InformacionViajero.js';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);

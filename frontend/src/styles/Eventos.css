@@ -1,0 +1,98 @@
+
+.eventos-page {
+    min-height: 100vh;
+    background-color: #f0fff4;
+}
+  
+.eventos-header {
+    background-color: #38a169;
+    color: white;
+    padding: 1rem 0;
+}
+  
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+  
+.eventos-info {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+  
+.eventos-info h2 {
+    color: #2f855a;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+  
+.eventos-info p {
+    color: #38a169;
+}
+  
+.eventos-imagen img {
+    width: 100%;
+    height: 16rem;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    margin-bottom: 2rem;
+}
+  
+.eventos-lista {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2rem;
+}
+  
+.evento-card {
+    background-color: white;
+    border-radius: 0.5rem;
+    overflow: hidden;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+  
+.evento-card img {
+    width: 100%;
+    height: 12rem;
+    object-fit: cover;
+}
+  
+.evento-info {
+    padding: 1rem;
+}
+  
+.evento-info h3 {
+    color: #2f855a;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+  
+.evento-info p {
+    color: #38a169;
+    margin-bottom: 1rem;
+}
+  
+.btn-ver-mas {
+    display: inline-block;
+    background-color: #38a169;
+    color: white;
+    padding: 0.5rem 1rem;
+    border-radius: 0.25rem;
+    text-decoration: none;
+    transition: background-color 0.3s ease;
+}
+  
+.btn-ver-mas:hover {
+    background-color: #2f855a;
+}
+  
+@media (max-width: 768px) {
+    .eventos-lista {
+      grid-template-columns: 1fr;
+    }
+}

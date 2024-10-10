@@ -1,7 +1,20 @@
 import React from 'react';
 import '../styles/Home.css';
+import elRetiro from '../styles/images/ElRetiro.jpg';
+import laCeja from '../styles/images/LaCeja.jpg';
+import elCarmen from '../styles/images/ElCarmen.jpg';
+import laUnion from '../styles/images/LaUnion.jpg';
+import rionegro from '../styles/images/Rionegro.jpg';
 
 const Home = () => {
+  const cityImages = {
+    'El Retiro': elRetiro,
+    'La Ceja': laCeja,
+    'El Carmen': elCarmen,
+    'La Unión': laUnion,
+    'Rionegro': rionegro,
+  };
+
   return (
     <main className="home">
       <section className="hero">
@@ -25,9 +38,9 @@ const Home = () => {
         <div className="container">
           <h2>Descubre el Oriente</h2>
           <div className="discover-grid">
-            {['El Retiro', 'La Ceja', 'El Carmen', 'La Unión', 'Rionegro'].map((city) => (
+            {Object.keys(cityImages).map((city) => (
               <div key={city} className="discover-item">
-                <img src={`/${city.toLowerCase().replace(' ', '-')}.jpg`} alt={city} />
+                <img src={cityImages[city]} alt={city} />
                 <h3>{city}</h3>
               </div>
             ))}
