@@ -5,6 +5,7 @@ import sys
 import json
 import requests
 import traceback
+import uuid
 
 # Se tiene que mapear la ruta relativa para importar firebaseConfig
 # Se obtiene la ruta de este archivo, luego se devuelve dos carpetas y finalmente se accede al archivo
@@ -17,20 +18,44 @@ import firebaseConfig
 # Se traen los servicios que son necesarios
 
 firestore_db = firebaseConfig.firestore_db
+firebase_storage = firebaseConfig.firebase_storage
 
 # [POST] Esta funcion se encargara de subir un sitio turistico en base a las indicaciones dadas
-# Recibe un JSON con: (Nombre, UUIDDueño, Tipo, Descripcion, Latitud, Longitud)
+# Recibe un form-data con un JSON (metadata) con: 
+# (Nombre, UUID, UUIDImagen, Tipo, Descripcion, Latitud, Longitud)
+# Y un archivo (file)
 @https_fn.on_request()
 def CrearUbicacion(request) -> https_fn.Response:
     try:
         
-        if not request.is_json:
-            return https_fn.Response('No hay JSON')
+        # Se validan y se obtienen el json y el archivo
+        if 'file' not in request.files:
+            return https_fn.Response("No se mando ningun archivo")
 
-        parametros = request.get_json()
+        if 'metadata' not in request.form:
+            return https_fn.Response("No se mando el JSONs")
+        
+        metadatos = request.form['metadata']
+        archivo = request.files['file']
 
-        nombre = parametros.get('nombre')
-        dueno = parametros.get('uuiddueno')
+        metadatos_json = json.loads(metadatos)
+
+        # Se valida si el archivo tiene un nombre y una extension adecuados
+        if archivo.filename == '':
+            return https_fn.Response("El archivo no tiene ningun nombre")
+
+        extension = archivo.filename.split(".")[1]
+
+        if not (extension == "jpg" or extension == "png"):
+            return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)")
+
+
+        # Se hace una ubicacion nueva para que todos los archivos sean diferentes
+        unique_id = str(uuid.uuid4())
+        ubicacion = unique_id + '_' + archivo.filename
+
+        nombre = metadatos_json['nombre']
+        dueno = metadatos_json['uuiddueno']
 
         # Validamos que no exista un lugar con el mismo nombre
 
@@ -42,18 +67,20 @@ def CrearUbicacion(request) -> https_fn.Response:
         if res_validacion:
             return https_fn.Response("Ya existe una ubicacion con el nombre: " + nombre)
         
+
         # Despues de la validacion, se procede a hacer crear el lugar
 
-        tipo = parametros.get('tipo')
-        municipio = parametros.get('municipio')
-        descripcion = parametros.get('descripcion')
-        latidud = float(parametros.get('latitud'))
-        longitud = float(parametros.get('longitud'))
+        tipo = metadatos_json['tipo']
+        municipio = metadatos_json['municipio']
+        descripcion = metadatos_json['descripcion']
+        latidud = float(metadatos_json['latitud'])
+        longitud = float(metadatos_json['longitud'])
 
         informacion = {
             "Nombre": nombre,
             "Municipio": municipio,
             "Dueño": dueno,
+            "URLImagen": ubicacion,
             "Tipo": tipo,
             "Descripcion": descripcion,
             "Latitud": latidud,
@@ -63,6 +90,10 @@ def CrearUbicacion(request) -> https_fn.Response:
         nueva_ubicacion = firestore_db.collection('Lugares').document()
         nueva_ubicacion.set(informacion)
 
+        # De aqui se guardan la imagen indicada
+        blob = firebase_storage.blob(ubicacion)
+        blob.upload_from_file(archivo)
+
         return https_fn.Response("Se creo la ubicacion correctamente")
 
     except Exception as e:
@@ -70,36 +101,41 @@ def CrearUbicacion(request) -> https_fn.Response:
 
 
 # [PUT] Esta funcion se encargara de modificar un sitio turistico en base a las indicaciones dadas
-# Recibe un JSON con: (Nombre, UUID, Tipo, Descripcion, Latitud, Longitud)
+# Recibe un form-data con un JSON (metadata) con: (Nombre, UUID, Tipo, Descripcion, Latitud, Longitud)
+# Opcionalmente puede recibir un archivo (file)
 @https_fn.on_request()
 def ModificarUbicacion(request) -> https_fn.Response:
     try:
         
-        if not request.is_json:
-            return https_fn.Response('No hay JSON')
+        # Se validan y se obtienen el json
 
-        parametros = request.get_json()
+        if 'metadata' not in request.form:
+            return https_fn.Response("No se mando el JSONs")
+        
+        metadatos = request.form['metadata']
 
-        uuid = parametros.get('uuid')
-        nombre = parametros.get('nombre')
+        metadatos_json = json.loads(metadatos)
 
         # Validamos que no exista un lugar con el mismo nombre y diferente UUID
+
+        nombre = metadatos_json['nombre']
+        lugar = metadatos_json['uuid']
 
         lugares_ref = firestore_db.collection("Lugares")
 
         query_validacion = lugares_ref.where("Nombre", "==", nombre)
         res_validacion = query_validacion.get() 
 
-        if (res_validacion and res_validacion[0].id != uuid):
+        if (res_validacion and res_validacion[0].id != lugar):
             return https_fn.Response("Ya existe una ubicacion con el nombre: " + nombre)
         
         # Despues de la validacion, se procede a hacer modificar el lugar
 
-        tipo = parametros.get('tipo')
-        municipio = parametros.get('municipio')
-        descripcion = parametros.get('descripcion')
-        latidud = float(parametros.get('latitud'))
-        longitud = float(parametros.get('longitud'))
+        tipo = metadatos_json['tipo']
+        municipio = metadatos_json['municipio']
+        descripcion = metadatos_json['descripcion']
+        latidud = float(metadatos_json['latitud'])
+        longitud = float(metadatos_json['longitud'])
 
         informacion = {
             "Nombre": nombre,
@@ -110,13 +146,32 @@ def ModificarUbicacion(request) -> https_fn.Response:
             "Longitud": longitud
         }
 
-        nueva_ubicacion = firestore_db.collection('Lugares').document(uuid)
+        nueva_ubicacion = firestore_db.collection('Lugares').document(lugar)
+
+        # Si se envia un archivo este lo reemplaza por el que habia antes
+        if 'file' in request.files:
+
+            url = nueva_ubicacion.get().to_dict().get("URLImagen")
+            archivo = request.files['file']
+
+            if archivo.filename == '':
+                return https_fn.Response("El archivo no tiene ningun nombre")
+
+            extension = archivo.filename.split(".")[1]
+
+            if not (extension == "jpg" or extension == "png"):
+                return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)")
+
+
+            blob = firebase_storage.blob(url)
+            blob.upload_from_file(archivo)
+
         nueva_ubicacion.update(informacion)
 
         return https_fn.Response("Se modifico la ubicacion correctamente")
 
     except Exception as e:
-        return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
+        return https_fn.Response("Ocurrio un error creando el usuario: " + str(e) + traceback.format_exc())
 
 
 # [DELETE] Esta funcion se encargara de borrar un sitio turistico
@@ -124,7 +179,8 @@ def ModificarUbicacion(request) -> https_fn.Response:
 @https_fn.on_request()
 def EliminarUbicacion(request) -> https_fn.Response:
     try:
-        
+
+        # Se valida el JSON y se obtiene el uuid
         if not request.is_json:
             return https_fn.Response('No hay JSON')
 
@@ -132,7 +188,13 @@ def EliminarUbicacion(request) -> https_fn.Response:
 
         uuid = parametros.get('uuid')
 
+        # Se obtiene la ubicacion y la url de su imagen asociada, de ahi se borra
         ubicacion = firestore_db.collection('Lugares').document(uuid)
+
+        url = ubicacion.get().to_dict().get('URLImagen')
+        blob = firebase_storage.blob(url)
+
+        blob.delete()
         ubicacion.delete()
 
         return https_fn.Response("Se elimino la ubicacion correctamente")
