@@ -3,7 +3,8 @@
 # Deploy with `firebase deploy`
 
 # PD: para correr esto se debe instalar
-# firebase-functions? (firebase)
+# firebase-admin (firebase)
+# requests-toolbelt (solicitudes)
 
 # Todas las funciones que esten en este archivo seran las que despliegue firebase, importar cualquier
 # funcion que se vaya a usar aca
@@ -20,3 +21,4 @@ from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
 from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion, EliminarUbicacion
 from src.Funciones.Multimedia import SubirContenido, EliminarContenido
 from src.Funciones.Eventos import CrearEvento, ModificarEvento, EliminarEvento
+from src.Funciones.Busqueda import BuscarUbicacionesPorMunicipio
