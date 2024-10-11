@@ -19,4 +19,4 @@ from src.Storage.Storage import ProbarStorage
 from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
 from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion, EliminarUbicacion
 from src.Funciones.Multimedia import SubirContenido, EliminarContenido
-from src.Funciones.Eventos import CrearEvento
+from src.Funciones.Eventos import CrearEvento, ModificarEvento, EliminarEvento
