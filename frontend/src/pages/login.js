@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
-import { BrowserRouter as  Link } from 'react-router-dom'; 
-import './styles/RegistroLogin.css';
+import { Link, useNavigate } from 'react-router-dom'; 
+import '../styles/RegistroLogin.css';
 import './register';
 import { useHistory } from 'react-router-dom';
 
 function Login() {
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
-  const history = useHistory();
+  const navigate = useNavigate();
 
   const handleSubmit = (event) => {
     event.preventDefault();
     // Simulación de inicio de sesión exitoso
     alert(`Inicio de sesión exitoso! ${username} ${password}`);
-    history.push('/app');
+    navigate('/app');
   };
 
   return (

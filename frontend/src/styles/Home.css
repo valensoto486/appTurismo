@@ -45,6 +45,11 @@
   background-color: rgba(76, 175, 80, 0.1);
   padding: 30px;
   border-radius: 10px;
+  font-size: 1.4rem; 
+}
+.about-content p {
+  font-size: 1.2rem; 
+  line-height: 1.6; 
 }
 
 .discover {

@@ -7,6 +7,7 @@ import './styles/App.css';
 import Eventos from './pages/Eventos';
 import InformacionViajero from './pages/InformacionViajero.js';
 import EventoDetalle from './pages/EventoDetalle.js';
+import Login from './pages/login.js';
 
 function App() {
   return (
@@ -15,9 +16,11 @@ function App() {
         <Header />
         <Routes>
           <Route path="/" element={<Home />} />
-          <Route path="/eventos" element={Eventos} />
-          <Route path="/informacion" component={InformacionViajero} />
+          <Route path="/eventos" element={<Eventos /> } />
+          <Route path="/informacion" element={<InformacionViajero />} />
           <Route path="/evento/:id" element={<EventoDetalle />} /> {/* Ruta para el detalle del evento */}
+          <Route path="/login" element={<Login />} />
+          
         </Routes>
         <Footer />
       </div>

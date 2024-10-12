@@ -5,6 +5,7 @@ import laCeja from '../styles/images/LaCeja.jpg';
 import elCarmen from '../styles/images/ElCarmen.jpg';
 import laUnion from '../styles/images/LaUnion.jpg';
 import rionegro from '../styles/images/Rionegro.jpg';
+import { Link } from 'react-router-dom';
 
 const Home = () => {
   const cityImages = {
@@ -21,7 +22,7 @@ const Home = () => {
         <div className="container">
           <h1>Descubre el Turismo Sostenible en Antioquia</h1>
           <p>Explora la belleza natural mientras cuidas el medio ambiente</p>
-          <button className="btn">Iniciar Sesión</button>
+          <Link className="btn" to="/login">Iniciar Sesión</Link>
         </div>
       </section>
 
