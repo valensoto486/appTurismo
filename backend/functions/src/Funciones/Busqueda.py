@@ -26,7 +26,7 @@ firebase_storage = firebaseConfig.firebase_storage
 
 # [GET] Obtiene los lugares dados un evento en especifico
 # Recibe un JSON con el: (municipio)
-# Devuelve un form-data con la lista de las ubicaciones y una lista de sus imagenes
+# Devuelve un form-data con la lista de las ubicaciones y una lista de contenido
 @https_fn.on_request()
 def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
     try:
@@ -80,7 +80,7 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
         body.write(json_respuesta)
         body.write(b'\r\n')
 
-    # Partes de archivos
+        # Partes de archivos
         for filename, file_content in archivos_storage:
             body.write(f'--{boundary}\r\n'.encode())
             body.write(f'Content-Disposition: form-data; name="{filename}"; filename="{filename}"\r\n'.encode())
@@ -88,7 +88,7 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
             body.write(file_content)
             body.write(b'\r\n')
 
-    # Cierre del límite
+        # Cierre del límite
         body.write(f'--{boundary}--\r\n'.encode())
 
         # Se Configura la respuesta con `multipart/form-data`
@@ -102,6 +102,57 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error en la busqueda: " + str(e))
 
+
+# [GET] Obtiene los comentarios de una ubicacion
+# Recibe un JSON con el: (uuid_ubicacion)
+# Devuelve un form-data con la lista de multimedia
+@https_fn.on_request()
+def BuscarContenidoMultimedia(request) -> https_fn.Response:
+    try:
+
+        # Se comprueba si se recibio el JSON
+        if not request.is_json:
+            return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
+
+        uuid_ubicacion = parametros.get('uuid_ubicacion')
+
+        ubicacion = firestore_db.collection('Lugares').document(uuid_ubicacion)
+        contenido = ubicacion.collection('Multimedia').stream()
+
+        lista_contenido = []
+
+        for document in contenido:
+            url = document.id
+            blob = firebase_storage.blob(url)
+            archivo = BytesIO()
+            blob.download_to_file(archivo)
+            archivo.seek(0)
+            lista_contenido.append((url, archivo.read()))
+
+        boundary = uuid.uuid4().hex
+        body = BytesIO()
+
+        # Partes de archivos
+        for filename, file_content in lista_contenido:
+            body.write(f'--{boundary}\r\n'.encode())
+            body.write(f'Content-Disposition: form-data; name="{filename}"; filename="{filename}"\r\n'.encode())
+            body.write(b'Content-Type: application/octet-stream\r\n\r\n')
+            body.write(file_content)
+            body.write(b'\r\n')
+
+        # Cierre del límite
+        body.write(f'--{boundary}--\r\n'.encode())
+
+        # Se Configura la respuesta con `multipart/form-data`
+        response = make_response(body.getvalue())
+        response.headers['Content-Type'] = f'multipart/form-data; boundary={boundary}'
+        return response
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error en la busqueda de contenido: " + str(e))    
+    
 
 # [GET] Obtiene los comentarios de una ubicacion
 # Recibe un JSON con el: (uuid_ubicacion)
