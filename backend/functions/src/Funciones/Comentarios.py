@@ -63,3 +63,25 @@ def CrearComentario(request) -> https_fn.Response:
         
     except Exception as e:
         return https_fn.Response("Ocurrio un error creando el comentario: " + str(e))
+    
+# [DELETE] Borra un comentario de una ubicacion turistica
+# Recibe un JSON con: (uuid_comentario, uuid_ubicacion)
+@https_fn.on_request()
+def BorrarComentario(request) -> https_fn.Response:
+    try:
+        if not request.is_json:
+            return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
+
+        uuid_comentario = parametros.get('uuid_comentario')
+        uuid_ubicacion = parametros.get('uuid_ubicacion')
+
+        ubicacion = firestore_db.collection('Lugares').document(uuid_ubicacion)
+        comentario = ubicacion.collection('Comentarios').document(uuid_comentario)
+
+        comentario.delete()
+        return https_fn.Response("Comentario borrado correctamente")
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error borrando el comentario: " + str(e))

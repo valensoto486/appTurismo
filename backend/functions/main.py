@@ -22,4 +22,4 @@ from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion, Elimin
 from src.Funciones.Multimedia import SubirContenido, EliminarContenido
 from src.Funciones.Eventos import CrearEvento, ModificarEvento, EliminarEvento
 from src.Funciones.Busqueda import BuscarUbicacionesPorMunicipio
-from src.Funciones.Comentarios import CrearComentario
+from src.Funciones.Comentarios import CrearComentario, BorrarComentario
