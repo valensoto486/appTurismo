@@ -21,7 +21,8 @@ firestore_db = firebaseConfig.firestore_db
 firebase_storage = firebaseConfig.firebase_storage
 
 # [POST] Crea un comentario de una ubicacion turistica
-# Recibe un JSON con: (uuid_usuario, uuid_ubicacion, contenido, calificacion, ind1, ind2, ind3, ind4)
+# Recibe un JSON con: (uuid_usuario, uuid_ubicacion, contenido, calificacion, 
+# gestion_residuos, cuidado_ambiente, movilidad_sostenible, cultura_local)
 @https_fn.on_request()
 def CrearComentario(request) -> https_fn.Response:
     try:
@@ -34,10 +35,10 @@ def CrearComentario(request) -> https_fn.Response:
         uuid_ubicacion = parametros.get('uuid_ubicacion')
         contenido = parametros.get('contenido')
         calificacion = int(parametros.get('calificacion'))
-        ind1 = int(parametros.get('ind1'))
-        ind2 = int(parametros.get('ind2'))
-        ind3 = int(parametros.get('ind3'))
-        ind4 = int(parametros.get('ind4'))
+        indicador_gr = int(parametros.get('gestion_residuos'))
+        indicador_ca = int(parametros.get('cuidado_ambiente'))
+        indicador_ms = int(parametros.get('movilidad_sostenible'))
+        indicador_cl = int(parametros.get('cultura_local'))
 
         ubicacion = firestore_db.collection('Lugares').document(uuid_ubicacion)
         nuevo_comentario = ubicacion.collection('Comentarios').document()
@@ -49,10 +50,10 @@ def CrearComentario(request) -> https_fn.Response:
             "Nombre": nombre,
             "Contenido": contenido,
             'Calificacion': calificacion,
-            'Ind1': ind1,
-            'Ind2': ind2,
-            'Ind3': ind3,
-            'Ind4': ind4,
+            'Gestion de Residuos': indicador_gr,
+            'Cuidado del Medio Ambiente': indicador_ca,
+            'Movilidad sostenible': indicador_ms,
+            'Cultura local': indicador_cl,
             'Fecha': datetime.now()
         }
 

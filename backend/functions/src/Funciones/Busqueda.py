@@ -5,7 +5,6 @@ import sys
 import json
 import requests
 import traceback
-#from requests_toolbelt.multipart import encoder
 from flask import make_response, jsonify
 import uuid
 
@@ -105,7 +104,8 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
 
 
 # [GET] Obtiene los comentarios de una ubicacion
-# Recibe un JSON con el: (uuid_ubicacion) 
+# Recibe un JSON con el: (uuid_ubicacion)
+# Devuelve un JSON con los comentarios
 @https_fn.on_request()
 def BuscarComentarios(request) -> https_fn.Response:
     try:
