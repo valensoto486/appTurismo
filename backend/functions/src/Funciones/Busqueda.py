@@ -7,6 +7,7 @@ import requests
 import traceback
 from flask import make_response, jsonify
 import uuid
+from datetime import datetime
 
 from io import BytesIO
 
@@ -102,6 +103,108 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error en la busqueda: " + str(e))
 
+
+# [GET] Obtiene 4 eventos basados en cuales son los mas recientes
+# Recibe un JSON con el: (municipio)
+# Devuelve un form-data con la lista de las ubicaciones y una lista de contenido
+'''
+def BuscarEventosInicio(request) -> https_fn.Response:
+    try:
+
+        ref_eventos = firestore_db.collection('Eventos')
+        eventos = ref_eventos.stream()
+        lista_eventos = [doc.to_dict() for doc in eventos]
+
+        id_lugares = []
+        fechas_recientes = []
+
+        for doc in lista_eventos:
+            fecha = doc.get('Comienza')
+            termino = doc.get('Termino')
+
+            if len(fechas_recientes) < 4 and termino > datetime.now():
+                id_lugares.append(doc.id)
+                fechas_recientes.append(fecha)
+                continue
+
+            fechas_recientes = sorted(fechas_recientes, reverse=True)
+
+            if(fecha < fechas_recientes[0]):
+
+                fechas_recientes[0] = fecha
+
+
+
+
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error en la busqueda de los eventos: " + str(e)) 
+'''
+
+# [GET] Obtiene los eventos basados en cuales son los mas recientes
+# Devuelve un form-data con un JSON de la lista de los y una lista de sus imagenes
+@https_fn.on_request()
+def BuscarEventos(request) -> https_fn.Response:
+    try:
+
+        ref_eventos = firestore_db.collection('Eventos')
+        eventos = ref_eventos.stream()
+
+        lista_eventos = []
+
+        for doc in eventos:
+
+            evento = doc.to_dict()
+            termina = evento.get('Termina').replace(tzinfo=None)
+
+            if termina <= datetime.now().replace(tzinfo=None):
+                continue
+
+            evento['Comienza'] = evento['Comienza'].strftime('%Y-%m-%d %H:%M:%S')
+            evento['Termina'] = evento['Termina'].strftime('%Y-%m-%d %H:%M:%S')
+            lista_eventos.append(evento)       
+
+        json_respuesta = json.dumps(lista_eventos).encode('utf-8')
+
+        # Se obtienen todos los archivos en base a la url
+        archivos_storage = []
+        
+        for document in lista_eventos:
+            url = document.get('URLImagen')
+            blob = firebase_storage.blob(url)
+            archivo = BytesIO()
+            blob.download_to_file(archivo)
+            archivo.seek(0)
+            archivos_storage.append((url, archivo.read()))
+
+        boundary = uuid.uuid4().hex
+        body = BytesIO()
+
+        # Parte 1: JSON de documentos
+        body.write(f'--{boundary}\r\n'.encode())
+        body.write(b'Content-Disposition: form-data; name="documentos"; filename="documentos.json"\r\n')
+        body.write(b'Content-Type: application/json\r\n\r\n')
+        body.write(json_respuesta)
+        body.write(b'\r\n')
+
+        # Partes de archivos
+        for filename, file_content in archivos_storage:
+            body.write(f'--{boundary}\r\n'.encode())
+            body.write(f'Content-Disposition: form-data; name="{filename}"; filename="{filename}"\r\n'.encode())
+            body.write(b'Content-Type: application/octet-stream\r\n\r\n')
+            body.write(file_content)
+            body.write(b'\r\n')
+
+        # Cierre del límite
+        body.write(f'--{boundary}--\r\n'.encode())
+
+        # Se Configura la respuesta con `multipart/form-data`
+        response = make_response(body.getvalue())
+        response.headers['Content-Type'] = f'multipart/form-data; boundary={boundary}'
+        return response
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error en la busqueda de los eventos: " + str(e)) 
 
 # [GET] Obtiene los comentarios de una ubicacion
 # Recibe un JSON con el: (uuid_ubicacion)
