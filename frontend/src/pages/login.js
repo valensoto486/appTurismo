@@ -31,7 +31,7 @@ function Login() {
         </label>
         <br />
         <button type="submit">Iniciar sesión</button>
-        <Link to="/register" className="registro">Si aun no tienes cuenta, registrate</Link>
+        <Link to="/register" className="registro">¿No tienes cuenta? Registrate</Link>
         
       </form>
     </div>

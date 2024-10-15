@@ -3,33 +3,29 @@
 @tailwind utilities;
 
 .hero {
-  background-image: url('./images/img1.jpg');
+  background-image: url('./images/FondoInicio.png');
   background-size: cover;
   background-position: center;
   color: var(--white);
   text-align: center;
-  padding: 100px 0;
+  padding: 120px 0;
+  height: 70vh;
 }
 
-.hero h1 {
-  font-size: 2.5rem;
-  margin-bottom: 1rem;
-}
-
-.hero p {
-  font-size: 1.2rem;
-  margin-bottom: 2rem;
-}
 
 .btn {
-  background-color: var(--primary-green);
+  background-color: rgba(255, 255, 255, 0);
   color: var(--white);
   padding: 10px 20px;
-  border: none;
+  border: 2px solid white;
   border-radius: 5px;
-  font-size: 1rem;
+  font-size: 1,3rem;
+  font-weight: bold; /* Texto en negrita */
   cursor: pointer;
   transition: background-color 0.3s;
+  position: absolute;
+  left: 132px;
+  top: 535px;
 }
 
 .btn:hover {
@@ -42,7 +38,7 @@
 }
 
 .about-content {
-  background-color: rgba(76, 175, 80, 0.1);
+  background-color: rgba(1, 70, 1, 0.418);
   padding: 30px;
   border-radius: 10px;
   font-size: 1.4rem; 
@@ -75,7 +71,7 @@
 }
 
 .events {
-  background-color: var(--light-green);
+  background-color: rgba(1, 70, 1, 0.753);
   padding: 50px 0;
 }
 
@@ -105,15 +101,18 @@
 
 @media (max-width: 768px) {
   .hero {
-    padding: 50px 0;
+    background-size: cover;
+    background-position: center;
+    color: var(--white);
+    text-align: center;
+    padding: 100px 0;
+    height: 45vh;
   }
 
-  .hero h1 {
-    font-size: 2rem;
-  }
-
-  .hero p {
-    font-size: 1rem;
+  .btn {
+    position: absolute;
+    left: 65px;
+    top: 350px;
   }
 
   .discover-grid, .events-grid {

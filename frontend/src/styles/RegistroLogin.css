@@ -1,15 +1,96 @@
-.login {
-    background-color: #f0f0f0;
+/* Estilos globales */
+body {
+  font-family: 'Arial', sans-serif;
+  background-color: #E8F5E9; 
+  color: #2E7D32; 
+  margin: 0;
+  padding: 0;
+}
+
+h2 {
+  text-align: center;
+  font-size: 2rem;
+  margin-top: 30px;
+  color: #1B5E20; 
+}
+
+form {
+  background-color: #ffffff; 
+  padding: 40px;
+  border-radius: 10px;
+  max-width: 400px;
+  margin: 50px auto;
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.1);
+}
+
+label {
+  display: block;
+  font-size: 1.1rem;
+  color: #2E7D32;
+  margin-bottom: 10px;
+}
+
+input[type="text"],
+input[type="password"] {
+  width: 100%;
+  padding: 10px;
+  margin-bottom: 20px;
+  border: 2px solid #AED581; 
+  border-radius: 5px;
+  background-color: #F1F8E9; 
+  font-size: 1rem;
+  color: #2E7D32;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+  outline: none;
+  border-color: #8BC34A; /* Verde más brillante para el foco */
+}
+
+/* Botón de iniciar sesión */
+button[type="submit"] {
+  width: 100%;
+  padding: 12px;
+  background-color: rgba(2, 101, 2, 0.911); /* Verde vibrante */
+  border: none;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  color: #fff; /* Texto blanco */
+  cursor: pointer;
+  transition: background-color 0.3s ease;
+}
+
+button[type="submit"]:hover {
+  background-color: #388E3C; /* Verde más oscuro en hover */
+}
+
+/* Estilo para el link de registro */
+.registro {
+  display: block;
+  text-align: center;
+  margin-top: 20px;
+  color: #388E3C; /* Verde oscuro */
+  text-decoration: none;
+  font-size: 1rem;
+  transition: color 0.3s ease;
+}
+
+.registro:hover {
+  color: #1B5E20; /* Cambia el color a un verde más profundo en hover */
+}
+
+/* Ajuste responsivo */
+@media (max-width: 600px) {
+  form {
     padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
   }
-  
-  .register {
-    background-color: #f0f0f0;
-    padding: 20px;
-    border: 1px solid #ddd;
-    border-radius: 10px;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+
+  h2 {
+    font-size: 2rem;
   }
+
+  button[type="submit"] {
+    font-size: 1rem;
+  }
+}

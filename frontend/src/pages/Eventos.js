@@ -15,7 +15,7 @@ function Eventos() {
     <div className="eventos-page">
       <header className="eventos-header">
         <div className="container">
-          <h1>Eventos de Turismo Sostenible</h1>
+          {/* <h1>Eventos</h1> */}
         </div>
       </header>
 
@@ -23,7 +23,7 @@ function Eventos() {
         <section className="eventos-info">
           <h2>Descubre Nuestros Eventos</h2>
           <p>
-            Participa en nuestros eventos de turismo sostenible y contribuye a la conservación de Antioquia mientras disfrutas de experiencias únicas.
+            Participa en nuestros eventos y contribuye a la conservación de Antioquia mientras disfrutas de experiencias únicas.
           </p>
         </section>
 

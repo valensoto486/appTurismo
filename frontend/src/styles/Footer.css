@@ -1,5 +1,9 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
 .footer {
-    background-color: var(--dark-green);
+    background-color: rgb(1, 70, 1);
     color: var(--white);
     padding: 50px 0 20px;
   }

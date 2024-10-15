@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 .header {
-    background-color: var(--primary-green);
+    background-color: rgb(1, 70, 1);
     color: var(--white);
     padding: 1rem 0;
   }

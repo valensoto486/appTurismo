@@ -4,11 +4,11 @@
 
 .informacion-viajero-page {
     min-height: 100vh;
-    background-color: #f0fff4;
+    background-color: rgba(1, 70, 1, 0.589);
 }
   
 .informacion-header {
-    background-color: #38a169;
+    background-color: rgba(1, 70, 1, 0.589);
     color: white;
     padding: 1rem 0;
 }

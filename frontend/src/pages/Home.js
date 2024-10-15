@@ -20,8 +20,6 @@ const Home = () => {
     <main className="home">
       <section className="hero">
         <div className="container">
-          <h1>Descubre el Turismo Sostenible en Antioquia</h1>
-          <p>Explora la belleza natural mientras cuidas el medio ambiente</p>
           <Link className="btn" to="/login">Iniciar Sesión</Link>
         </div>
       </section>
@@ -50,7 +48,7 @@ const Home = () => {
       </section>
 
       <section className="events">
-        <div className="container">
+        <div className="container2">
           <h2>Eventos</h2>
           <div className="events-grid">
             {[1, 2, 3, 4].map((num) => (

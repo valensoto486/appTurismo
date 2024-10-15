@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import '../styles/Header.css';
 import Eventos from '../pages/Eventos';
 import InformacionViajero from '../pages/InformacionViajero.js';
+import Logo from '../styles/images/Logo.png';
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
@@ -12,7 +13,7 @@ const Header = () => {
       <div className="container">
         <nav className="nav">
           <Link to="/" className="logo">
-            <img src="/logo.png" alt="Logo" />
+            <img src={Logo} alt="Logo" />
           </Link>
           <button className="nav-toggle" onClick={() => setIsOpen(!isOpen)}>
             ☰

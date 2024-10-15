@@ -6,7 +6,7 @@ function InformacionViajero() {
     <div className="informacion-viajero-page">
       <header className="informacion-header">
         <div className="container">
-          <h1>Información al Viajero</h1>
+          {/* <h1>Información al Viajero</h1> */}
         </div>
       </header>
 
