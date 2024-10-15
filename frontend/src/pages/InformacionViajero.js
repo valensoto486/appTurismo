@@ -1,5 +1,6 @@
 import React from 'react';
 import '../styles/InformacionViajero.css';
+import Aviso from '../styles/images/Aviso.png'
 
 function InformacionViajero() {
   return (
@@ -57,7 +58,7 @@ function InformacionViajero() {
 
         <section className="informacion-imagen">
           <img
-            src="/placeholder.svg?height=400&width=800"
+            src={Aviso}
             alt="Paisaje de Antioquia"
           />
         </section>

@@ -30,6 +30,7 @@ label {
   margin-bottom: 10px;
 }
 
+input[type="email"],
 input[type="text"],
 input[type="password"] {
   width: 100%;
@@ -65,16 +66,6 @@ button[type="submit"]:hover {
   background-color: #388E3C; /* Verde más oscuro en hover */
 }
 
-/* Estilo para el link de registro */
-.registro {
-  display: block;
-  text-align: center;
-  margin-top: 20px;
-  color: #388E3C; /* Verde oscuro */
-  text-decoration: none;
-  font-size: 1rem;
-  transition: color 0.3s ease;
-}
 
 .registro:hover {
   color: #1B5E20; /* Cambia el color a un verde más profundo en hover */

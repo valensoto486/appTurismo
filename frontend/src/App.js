@@ -8,6 +8,7 @@ import Eventos from './pages/Eventos';
 import InformacionViajero from './pages/InformacionViajero.js';
 import EventoDetalle from './pages/EventoDetalle.js';
 import Login from './pages/login.js';
+import Register from './pages/register.js';
 
 function App() {
   return (
@@ -20,7 +21,8 @@ function App() {
           <Route path="/informacion" element={<InformacionViajero />} />
           <Route path="/evento/:id" element={<EventoDetalle />} /> {/* Ruta para el detalle del evento */}
           <Route path="/login" element={<Login />} />
-          
+          <Route path="/register" element={<Register />} />
+
         </Routes>
         <Footer />
       </div>

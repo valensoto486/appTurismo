@@ -23,7 +23,7 @@ const Header = () => {
             <li className="dropdown">
               <span>Descubre el Oriente</span>
               <ul className="dropdown-menu">
-                <li><Link to="/el-retiro">El Retiro</Link></li>
+                <li><Link to="/Municipios">El Retiro</Link></li>
                 <li><Link to="/la-ceja">La Ceja</Link></li>
                 <li><Link to="/el-carmen">El Carmen</Link></li>
                 <li><Link to="/la-union">La Unión</Link></li>
