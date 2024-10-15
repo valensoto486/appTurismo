@@ -6,7 +6,7 @@ import json
 import requests
 import traceback
 #from requests_toolbelt.multipart import encoder
-from flask import make_response
+from flask import make_response, jsonify
 import uuid
 
 from io import BytesIO
@@ -102,3 +102,30 @@ def BuscarUbicacionesPorMunicipio(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error en la busqueda: " + str(e))
+
+
+# [GET] Obtiene los comentarios de una ubicacion
+# Recibe un JSON con el: (uuid_ubicacion) 
+@https_fn.on_request()
+def BuscarComentarios(request) -> https_fn.Response:
+    try:
+
+        if not request.is_json:
+            return https_fn.Response('No hay JSON')
+
+        parametros = request.get_json()
+
+        uuid_ubicacion = parametros.get('uuid_ubicacion')
+
+        ubicacion = firestore_db.collection('Lugares').document(uuid_ubicacion)
+        comentarios = ubicacion.collection('Comentarios')
+        lista_comentarios = comentarios.stream()
+
+        resultado = []
+        for doc in lista_comentarios:
+            resultado.append(doc.to_dict())
+
+        return jsonify(resultado)
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error en la busqueda de comentarios: " + str(e))
