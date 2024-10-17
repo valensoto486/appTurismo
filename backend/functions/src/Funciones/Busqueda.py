@@ -190,8 +190,12 @@ def BuscarEventosInicio(request) -> https_fn.Response:
 
         ref_eventos = firestore_db.collection('Eventos')
         eventos = ref_eventos.stream()
-        lista_eventos = [doc.to_dict() for doc in eventos]
+        lista_eventos = []
 
+        for doc in eventos:
+            evento = doc.to_dict()
+            evento['Id'] = doc.id
+            lista_eventos.append(evento)
 
         eventos_ordenados = []
 
@@ -280,6 +284,7 @@ def BuscarEventos(request) -> https_fn.Response:
         for doc in eventos:
 
             evento = doc.to_dict()
+            evento['Id'] = doc.id
             termina = evento.get('Termina').replace(tzinfo=None)
 
             if termina <= datetime.now().replace(tzinfo=None):
@@ -350,8 +355,10 @@ def BuscarContenidoMultimedia(request) -> https_fn.Response:
         contenido = ubicacion.collection('Multimedia').stream()
 
         lista_contenido = []
+        lista_url = []
 
         for document in contenido:
+            lista_url.append({"Id": document.id})
             url = document.id
             blob = firebase_storage.blob(url)
             archivo = BytesIO()
@@ -359,8 +366,17 @@ def BuscarContenidoMultimedia(request) -> https_fn.Response:
             archivo.seek(0)
             lista_contenido.append((url, archivo.read()))
 
+        json_respuesta = json.dumps(lista_url).encode('utf-8')
+
         boundary = uuid.uuid4().hex
         body = BytesIO()
+
+        # Parte 1: JSON de documentos
+        body.write(f'--{boundary}\r\n'.encode())
+        body.write(b'Content-Disposition: form-data; name="documentos"; filename="documentos.json"\r\n')
+        body.write(b'Content-Type: application/json\r\n\r\n')
+        body.write(json_respuesta)
+        body.write(b'\r\n')
 
         # Partes de archivos
         for filename, file_content in lista_contenido:
@@ -402,7 +418,9 @@ def BuscarComentarios(request) -> https_fn.Response:
 
         resultado = []
         for doc in lista_comentarios:
-            resultado.append(doc.to_dict())
+            comentario = doc.to_dict()
+            comentario['Id'] = doc.id
+            resultado.append(comentario)
 
         return jsonify(resultado)
 
