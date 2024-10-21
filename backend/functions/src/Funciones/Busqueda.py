@@ -336,6 +336,7 @@ def BuscarEventos(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error en la busqueda de los eventos: " + str(e)) 
 
+
 # [GET] Obtiene los comentarios de una ubicacion
 # Recibe un JSON con el: (uuid_ubicacion)
 # Devuelve un form-data con la lista de multimedia

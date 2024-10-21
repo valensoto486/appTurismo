@@ -14,20 +14,27 @@ ruta_archivo = os.path.dirname( __file__ )
 ruta_config = os.path.join( ruta_archivo, '..', '..')
 sys.path.append( ruta_config )
 import firebaseConfig
+from src.Autenticador.Autenticador import AutenticarMetodo
 
 # Se traen los servicios que son necesarios
 
 firestore_db = firebaseConfig.firestore_db
 firebase_storage = firebaseConfig.firebase_storage
 
+# REQUIERE DE UN ROL (anfitrion, admin)
 # [POST] Esta funcion se encargara de subir un sitio turistico en base a las indicaciones dadas
 # Recibe un form-data con un JSON (metadata) con: 
-# (Nombre, UUID, UUIDImagen, Tipo, Descripcion, Latitud, Longitud)
-# Y un archivo (file)
+# (nombre, tipo, municipio, descripcion, latitud, longitud)
+# Y un archivo jpg o png (file)
 @https_fn.on_request()
 def CrearUbicacion(request) -> https_fn.Response:
     try:
         
+        # Se valida el rol
+        dueno = AutenticarMetodo(request=request, roles=['anfitrion', 'admin']) 
+        if dueno is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
+
         # Se validan y se obtienen el json y el archivo
         if 'file' not in request.files:
             return https_fn.Response("No se mando ningun archivo")
@@ -55,7 +62,7 @@ def CrearUbicacion(request) -> https_fn.Response:
         ubicacion = unique_id + '_' + archivo.filename
 
         nombre = metadatos_json['nombre']
-        dueno = metadatos_json['uuiddueno']
+        #dueno = metadatos_json['uuiddueno']
 
         # Validamos que no exista un lugar con el mismo nombre
 
@@ -100,13 +107,18 @@ def CrearUbicacion(request) -> https_fn.Response:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e))
 
 
+# REQUIERE DE UN ROL (anfitrion, admin)
 # [PUT] Esta funcion se encargara de modificar un sitio turistico en base a las indicaciones dadas
-# Recibe un form-data con un JSON (metadata) con: (Nombre, UUID, Tipo, Descripcion, Latitud, Longitud)
-# Opcionalmente puede recibir un archivo (file)
+# Recibe un form-data con un JSON (metadata) con: (nombre, uuid, tipo, descripcion, latitud, longitud)
+# Opcionalmente puede recibir un archivo en jpg o png (file)
 @https_fn.on_request()
 def ModificarUbicacion(request) -> https_fn.Response:
     try:
         
+        # Se valida el rol
+        if AutenticarMetodo(request=request, roles=['anfitrion', 'admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
+
         # Se validan y se obtienen el json
 
         if 'metadata' not in request.form:
@@ -173,12 +185,16 @@ def ModificarUbicacion(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error creando el usuario: " + str(e) + traceback.format_exc())
 
-
+# REQUIERE DE UN ROL (anfitrion, admin)
 # [DELETE] Esta funcion se encargara de borrar un sitio turistico
-# Recibe un JSON con: (UUID)
+# Recibe un JSON con: (uuid)
 @https_fn.on_request()
 def EliminarUbicacion(request) -> https_fn.Response:
     try:
+        
+        # Se validad el rol
+        if AutenticarMetodo(request=request, roles=['anfitrion', 'admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
 
         # Se valida el JSON y se obtiene el uuid
         if not request.is_json:

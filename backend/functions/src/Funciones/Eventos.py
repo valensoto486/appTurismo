@@ -15,12 +15,14 @@ ruta_archivo = os.path.dirname( __file__ )
 ruta_config = os.path.join( ruta_archivo, '..', '..')
 sys.path.append( ruta_config )
 import firebaseConfig
+from src.Autenticador.Autenticador import AutenticarMetodo
 
 # Se traen los servicios que son necesarios
 
 firestore_db = firebaseConfig.firestore_db
 firebase_storage = firebaseConfig.firebase_storage
 
+# REQUIERE ROL DE admin
 # [POST] Esta funcion se encarga de crear un evento
 # Recibe un format-data con:
 # JSON (metadata) que recibe: (nombre, municipio, descripcion, fecha_inicio, fecha_final)
@@ -28,6 +30,10 @@ firebase_storage = firebaseConfig.firebase_storage
 @https_fn.on_request()
 def CrearEvento(request) -> https_fn.Response:
     try:
+        
+        # Se autoriza si el usuario tiene el rol adecuado
+        if AutenticarMetodo(request=request, roles=['admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
 
         # Se validan y se obtienen el json y el archivo
         if 'file' not in request.files:
@@ -99,7 +105,8 @@ def CrearEvento(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error creando el evento: " + str(e))
-    
+
+# REQUIERE ROL DE admin 
 # [PUT] Esta funcion se encarga de modificar un evento
 # Recibe un format-data con:
 # JSON (metadata) que recibe: (nombre, uuid, municipio, descripcion, fecha_inicio, fecha_final)
@@ -108,6 +115,10 @@ def CrearEvento(request) -> https_fn.Response:
 def ModificarEvento(request) -> https_fn.Response:
     try:
         
+        # Se autoriza si el usuario tiene el rol adecuado
+        if AutenticarMetodo(request=request, roles=['admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
+
         # Se validan y se obtienen el json
 
         if 'metadata' not in request.form:
@@ -178,12 +189,17 @@ def ModificarEvento(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error creando el evento: " + str(e) + traceback.format_exc())
 
+# REQUIERE ROL DE admin
 # [DELETE] Elimina un evento
 # Esta función resibe un JSON con: (uuid)  
 @https_fn.on_request()
 def EliminarEvento(request) -> https_fn.Response:
     try:
 
+        # Se autoriza si el usuario tiene el rol adecuado
+        if AutenticarMetodo(request=request, roles=['admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
+        
         # Se valida el JSON y se obtiene el uuid
         if not request.is_json:
             return https_fn.Response('No hay JSON')

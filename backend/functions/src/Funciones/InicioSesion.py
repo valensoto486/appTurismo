@@ -35,6 +35,8 @@ def CrearUsuario(request) -> https_fn.Response:
         # Crea el usuario en el autenticador y su informacion lo almacena en una variable
         usuario = firebase_auth.create_user(email=correo, password=contrasenia)
 
+        firebase_auth.set_custom_user_claims(usuario.uid, {'rol': rol})
+
         # Con el uid del usuario se crea un registro en firestore ligado a ese uid, con los atributos
         # especificados en el JSON nuevo_usuario
         referencia = firestore_db.collection('Usuarios').document(usuario.uid)
@@ -82,6 +84,7 @@ def AutenticarUsuario(request) -> https_fn.Response:
         if response.status_code == 200:
             data = response.json()
             uid = data['localId']
+            jwt = data.get('idToken')
 
             referencia = firestore_db.collection('Usuarios').document(uid)
 
@@ -89,8 +92,9 @@ def AutenticarUsuario(request) -> https_fn.Response:
 
             # Se crea un JSON que devuelve el uid del usuario y el rol que este tiene en la aplicacion
             respuesta_json = {
-                'uid': uid,
-                'rol': usuario.to_dict().get("rol")
+                #'uid': uid,
+                #'rol': usuario.to_dict().get("rol")
+                'Token': jwt
             }
 
             return https_fn.Response(json.dumps(respuesta_json), mimetype='application/json')

@@ -14,17 +14,23 @@ ruta_archivo = os.path.dirname( __file__ )
 ruta_config = os.path.join( ruta_archivo, '..', '..')
 sys.path.append( ruta_config )
 import firebaseConfig
+from src.Autenticador.Autenticador import AutenticarMetodo
 
 # Se traen los servicios que son necesarios
 
 firestore_db = firebaseConfig.firestore_db
 firebase_storage = firebaseConfig.firebase_storage
 
+# REQUIERE ROL DE (anfitrion, admin)
 # [POST] este metodo sube un archivo multimedia a firebase
 # Recibe un archivo file que sea: (jpg, png, mp4) y un json conocido como metadata con: (uuid Lugar)
 @https_fn.on_request()
 def SubirContenido(request) -> https_fn.Response:
     try:
+
+        # Se valida si se tiene el rol adecuado
+        if AutenticarMetodo(request=request, roles=['anfitrion', 'admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
 
         # Se valida si el metodo es POST, se manda el archivo o si tiene nombre
         if request.method != 'POST':
@@ -68,12 +74,17 @@ def SubirContenido(request) -> https_fn.Response:
     except Exception as e:
         return https_fn.Response("Ocurrio un error subiendo el recurso: " + str(e))
 
-
+# REQUIERE ROL DE (anfitrion, admin)
 # [DELETE] este borra un archivo del storage
 # Recibe un JSON: (uuid_lugar, uuid_recurso)
 @https_fn.on_request()
 def EliminarContenido(request) -> https_fn.Response:
     try:
+
+        # Se valida si se tiene el rol adecuado
+        if AutenticarMetodo(request=request, roles=['anfitrion', 'admin']) is None:
+            return https_fn.Response("Autorizacion denegada", status=401)
+
         # Se revisa y obtienen los campos del JSON
         if not request.is_json:
             return https_fn.Response('No hay JSON')
