@@ -205,3 +205,20 @@ def EliminarEvento(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error borrando el evento: " + str(e))
+
+
+def ObtenerEventos(request) -> https_fn.Response:
+    try:
+        lugares_ref = firestore_db.collection("Eventos")
+        eventos = lugares_ref.stream()
+
+        lista_eventos = []
+        for evento in eventos:
+            evento_dict = evento.to_dict()
+            evento_dict['id'] = evento.id  
+            lista_eventos.append(evento_dict)
+
+        return https_fn.Response(json.dumps(lista_eventos), status_code=200)
+
+    except Exception as e:
+        return https_fn.Response("Ocurrio un error obteniendo los eventos: " + str(e), status_code=500)
