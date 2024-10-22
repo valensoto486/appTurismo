@@ -1,4 +1,4 @@
-#!C:\Users\57300\Documents\Universidad\TIC1\PaginaTurismoSostenible\appTurismo\backend\functions\venv\Scripts\python.exe
+#!C:\Users\valen\Desktop\GitHub\appTurismo\backend\functions\venv\Scripts\python.exe
 # -*- coding: utf-8 -*-
 # Copyright 2024 Google LLC
 #
