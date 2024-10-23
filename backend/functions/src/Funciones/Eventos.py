@@ -207,6 +207,7 @@ def EliminarEvento(request) -> https_fn.Response:
         return https_fn.Response("Ocurrio un error borrando el evento: " + str(e))
 
 
+@https_fn.on_request()
 def ObtenerEventos(request) -> https_fn.Response:
     try:
         lugares_ref = firestore_db.collection("Eventos")
