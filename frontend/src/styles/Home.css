@@ -1,0 +1,121 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.hero {
+  background-image: url('./images/FondoInicio.png');
+  background-size: cover;
+  background-position: center;
+  color: var(--white);
+  text-align: center;
+  padding: 120px 0;
+  height: 70vh;
+}
+
+
+.btn {
+  background-color: rgba(255, 255, 255, 0);
+  color: var(--white);
+  padding: 10px 20px;
+  border: 2px solid white;
+  border-radius: 5px;
+  font-size: 1,3rem;
+  font-weight: bold; /* Texto en negrita */
+  cursor: pointer;
+  transition: background-color 0.3s;
+  position: absolute;
+  left: 132px;
+  top: 535px;
+}
+
+.btn:hover {
+  background-color: var(--dark-green);
+}
+
+.about {
+  background-color: var(--white);
+  padding: 50px 0;
+}
+
+.about-content {
+  background-color: rgba(1, 70, 1, 0.418);
+  padding: 30px;
+  border-radius: 10px;
+  font-size: 1.4rem; 
+}
+.about-content p {
+  font-size: 1.2rem; 
+  line-height: 1.6; 
+}
+
+.discover {
+  padding: 50px 0;
+}
+
+.discover-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.discover-item {
+  text-align: center;
+}
+
+.discover-item img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+  border-radius: 10px;
+}
+
+.events {
+  background-color: rgba(1, 70, 1, 0.753);
+  padding: 50px 0;
+}
+
+.events-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+  gap: 20px;
+  margin-top: 30px;
+}
+
+.event-card {
+  background-color: var(--white);
+  border-radius: 10px;
+  overflow: hidden;
+  box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+}
+
+.event-card img {
+  width: 100%;
+  height: 150px;
+  object-fit: cover;
+}
+
+.event-card h3, .event-card p {
+  padding: 10px;
+}
+
+@media (max-width: 768px) {
+  .hero {
+    background-size: cover;
+    background-position: center;
+    color: var(--white);
+    text-align: center;
+    padding: 100px 0;
+    height: 45vh;
+  }
+
+  .btn {
+    position: absolute;
+    left: 65px;
+    top: 350px;
+  }
+
+  .discover-grid, .events-grid {
+    grid-template-columns: 1fr;
+  }
+}

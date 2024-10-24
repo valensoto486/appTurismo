@@ -1,0 +1,63 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+.informacion-viajero-page {
+    min-height: 100vh;
+    background-color: rgba(1, 70, 1, 0.589);
+}
+  
+.informacion-header {
+    background-color: rgba(1, 70, 1, 0.589);
+    color: white;
+    padding: 1rem 0;
+}
+  
+.container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1rem;
+}
+  
+.informacion-content {
+    background-color: white;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    padding: 1.5rem;
+    margin-bottom: 2rem;
+}
+  
+.informacion-content h2 {
+    color: #2f855a;
+    font-size: 1.5rem;
+    margin-bottom: 1rem;
+}
+  
+.info-section {
+    margin-bottom: 1.5rem;
+}
+  
+.info-section h3 {
+    color: #38a169;
+    font-size: 1.25rem;
+    margin-bottom: 0.5rem;
+}
+  
+.info-section p {
+    color: #2f855a;
+}
+  
+.informacion-imagen img {
+    width: 50%;
+    height: 35rem;
+    position: center;
+    object-fit: cover;
+    border-radius: 0.5rem;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+  
+@media (max-width: 768px) {
+    .informacion-content {
+      padding: 1rem;
+    }
+}
