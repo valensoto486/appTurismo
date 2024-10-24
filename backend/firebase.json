@@ -1,7 +1,8 @@
 {
   "functions": [
     {
-      "source": "functions",
+      "source": "functions/src",
+      "runtime": "python310",
       "codebase": "default",
       "ignore": [
         "venv",
@@ -14,6 +15,9 @@
   ],
   "emulators": {
     "functions": {
+      "source" : "functions/src/funciones",
+      "runtime": "python310",
+      "host": "localhost",
       "port": 5001
     },
     "firestore": {

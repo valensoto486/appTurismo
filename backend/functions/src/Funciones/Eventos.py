@@ -1,4 +1,6 @@
 from firebase_functions import https_fn
+from firebase_admin import initialize_app
+from firebase_admin import firestore
 
 import os
 import sys
@@ -18,9 +20,6 @@ import firebaseConfig
 
 # Se traen los servicios que son necesarios
 
-firestore_db = firebaseConfig.firestore_db
-firebase_storage = firebaseConfig.firebase_storage
-
 # [POST] Esta funcion se encarga de crear un evento
 # Recibe un format-data con:
 # JSON (metadata) que recibe: (nombre, municipio, descripcion, fecha_inicio, fecha_final)
@@ -28,7 +27,9 @@ firebase_storage = firebaseConfig.firebase_storage
 @https_fn.on_request()
 def CrearEvento(request) -> https_fn.Response:
     try:
-
+        initialize_app()
+        firestore_db = firebaseConfig.firestore_db
+        firebase_storage = firebaseConfig.firebase_storage
         # Se validan y se obtienen el json y el archivo
         if 'file' not in request.files:
             return https_fn.Response("No se mando ningun archivo")
@@ -223,3 +224,7 @@ def ObtenerEventos(request) -> https_fn.Response:
 
     except Exception as e:
         return https_fn.Response("Ocurrio un error obteniendo los eventos: " + str(e), status_code=500)
+
+@https_fn.on_request()
+def TestFunction(request) -> https_fn.Response:
+    return https_fn.Response("La función está funcionando correctamente.")
