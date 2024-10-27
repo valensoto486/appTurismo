@@ -1,20 +1,23 @@
-// Import the functions you need from the SDKs you need
-import { initializeApp } from "firebase/app";
-// TODO: Add SDKs for Firebase products that you want to use
-// https://firebase.google.com/docs/web/setup#available-libraries
+# Este archivo se usara para configurar la SDK de firebase y para conectar los servicios 
+# que se van a utilizar
 
-// Your web app's Firebase configuration
-// For Firebase JS SDK v7.20.0 and later, measurementId is optional
-const firebaseConfig = {
-  apiKey: "AIzaSyBT-u7CtZk66Yoe8JL24dmJRZEhVS8K5p8",
-  authDomain: "turismoeco-598e9.firebaseapp.com",
-  projectId: "turismoeco-598e9",
-  storageBucket: "turismoeco-598e9.appspot.com",
-  messagingSenderId: "542819207454",
-  appId: "1:542819207454:web:f9f31903dcd3ab44dc210f",
-  measurementId: "G-L5QP73HRP9"
-};
+# Para usar correctamente esto se debe correr el comando ($ pip install firebase-admin)
 
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
+import firebase_admin
+from firebase_admin import credentials, auth, storage, firestore
+
+try: 
+
+    # Se cambio la inicializacion a las credenciales
+    credencial = credentials.Certificate('./credenciales.json')
+    firebase_admin.initialize_app(credencial, {
+    'storageBucket': 'turismoeco-598e9.appspot.com'}) 
+
+    # Aca van los servicios de firebase que se van a implementar (Storage, Auth, Firestore)  
+    firebase_auth = firebase_admin.auth
+    firestore_db = firestore.client()
+    firebase_storage = firebase_admin.storage.bucket()
+except Exception:
+    print("Ocurrio un error conectando los servicios de firebase firebase en el backend")
+
 
