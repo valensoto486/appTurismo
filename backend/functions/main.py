@@ -14,7 +14,9 @@ import json
 #from src.Storage.Storage import ProbarStorage
 
 app = Flask(__name__)
-CORS(app=app, resources={r"/*": {"origins": "*"}})
+
+CORS(app=app, resources={r"/*": {"origins": "https://turismoeco-598e9.web.app"}})
+
 from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
 from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion, EliminarUbicacion
 from src.Funciones.Multimedia import SubirContenido, EliminarContenido
