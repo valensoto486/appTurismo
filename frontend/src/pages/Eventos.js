@@ -1,15 +1,34 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
 import '../styles/Eventos.css';
 
 function Eventos() {
-  // Simulación de eventos desde una base de datos
-  const eventos = [
-    { id: 1, titulo: "Festival de la Naturaleza", descripcion: "Celebra la biodiversidad de Antioquia", imagen: "/placeholder.svg?height=200&width=300" },
-    { id: 2, titulo: "Feria Gastronómica Sostenible", descripcion: "Degusta platos locales preparados con ingredientes orgánicos", imagen: "/placeholder.svg?height=200&width=300" },
-    { id: 3, titulo: "Taller de Ecoturismo", descripcion: "Aprende sobre prácticas de turismo responsable", imagen: "/placeholder.svg?height=200&width=300" },
-    { id: 4, titulo: "Caminata Ecológica", descripcion: "Explora los senderos naturales de la región", imagen: "/placeholder.svg?height=200&width=300" },
-  ];
+  const [eventos, setEventos] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  useEffect(() => {
+    const fetchEventos = async () => {
+      try {
+        const eventosData = await fetch('https://buscareventos-jkomhrg5ba-uc.a.run.app'); // Llama a la función para obtener eventos
+        setEventos(eventosData);
+      } catch (err) {
+        setError('Error al cargar los eventos.'); // Manejo de errores
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchEventos();
+  }, []);
+
+  if (loading) {
+    return <div>Cargando eventos...</div>;
+  }
+
+  if (error) {
+    return <div>{error}</div>;
+  }
 
   return (
     <div className="eventos-page">

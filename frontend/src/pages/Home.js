@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
 import elRetiro from '../styles/images/ElRetiro.jpg';
 import laCeja from '../styles/images/LaCeja.jpg';
@@ -8,6 +8,16 @@ import rionegro from '../styles/images/Rionegro.jpg';
 import { Link } from 'react-router-dom';
 
 const Home = () => {
+  // Se verifica si una persona ha iniciado sesion o no 
+  // Si no ha iniciado sesion se muestra el btn de iniciar sesion, de lo contrario no
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+
+  useEffect(() => {
+    // Verifica si el usuario ha iniciado sesión
+    const token = localStorage.getItem('authToken');
+    setIsAuthenticated(!!token);
+  }, []);
+
   const cityImages = {
     'El Retiro': elRetiro,
     'La Ceja': laCeja,
@@ -20,7 +30,10 @@ const Home = () => {
     <main className="home">
       <section className="hero">
         <div className="container">
+        {/* Solo se muestra el btn si no ha iniciado sesion */}
+        {!isAuthenticated && (
           <Link className="btn" to="/login">Iniciar Sesión</Link>
+        )}
         </div>
       </section>
 

@@ -6,10 +6,41 @@ function Register() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
 
-  const handleSubmit = (event) => {
+  const handleSubmit = async (event) => {
     event.preventDefault();
-    // Simulación de registro exitoso
-    alert(`Registro exitoso! ${username} ${email} ${password}`);
+
+    // Crear el objeto con los datos del nuevo usuario
+    const newUser = {
+      nombre: username,
+      correo: email,
+      contrasenia: password,
+      rol: 'usuario',  // Puedes ajustar el rol según tus necesidades
+    };
+
+    try {
+      // Realizar la solicitud al backend para crear un nuevo usuario
+      const response = await fetch('https://crearusuario-jkomhrg5ba-uc.a.run.app', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newUser),
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // Registro exitoso
+        alert(`Registro exitoso! Bienvenido, ${username}`);
+        // Aquí puedes redirigir al usuario a la página de inicio de sesión o a otra página
+      } else {
+        // Manejar errores en el registro
+        alert(`Error: ${data}`);
+      }
+    } catch (error) {
+      console.error('Error al registrar:', error);
+      alert('Hubo un error al intentar registrarte');
+    }
   };
 
   return (
@@ -18,17 +49,32 @@ function Register() {
       <form onSubmit={handleSubmit}>
         <label>
           Nombre de usuario:
-          <input type="text" value={username} onChange={(event) => setUsername(event.target.value)} />
+          <input
+            type="text"
+            value={username}
+            onChange={(event) => setUsername(event.target.value)}
+            required
+          />
         </label>
         <br />
         <label>
           Correo electrónico:
-          <input type="email" value={email} onChange={(event) => setEmail(event.target.value)} />
+          <input
+            type="email"
+            value={email}
+            onChange={(event) => setEmail(event.target.value)}
+            required
+          />
         </label>
         <br />
         <label>
           Contraseña:
-          <input type="password" value={password} onChange={(event) => setPassword(event.target.value)} />
+          <input
+            type="password"
+            value={password}
+            onChange={(event) => setPassword(event.target.value)}
+            required
+          />
         </label>
         <br />
         <button type="submit">Registrarse</button>
