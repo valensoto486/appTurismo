@@ -33,14 +33,14 @@ def CrearEvento(request) -> https_fn.Response:
         
         # Se autoriza si el usuario tiene el rol adecuado
         if AutenticarMetodo(request=request, roles=['admin']) is None:
-            return https_fn.Response("Autorizacion denegada", status=401)
+            return https_fn.Response("Autorizacion denegada", status=401, headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         # Se validan y se obtienen el json y el archivo
         if 'file' not in request.files:
-            return https_fn.Response("No se mando ningun archivo")
+            return https_fn.Response("No se mando ningun archivo", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         if 'metadata' not in request.form:
-            return https_fn.Response("No se mando el JSONs")
+            return https_fn.Response("No se mando el JSONs", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         metadatos = request.form['metadata']
         archivo = request.files['file']
@@ -49,12 +49,12 @@ def CrearEvento(request) -> https_fn.Response:
 
         # Se valida si el archivo tiene un nombre y una extension adecuados
         if archivo.filename == '':
-            return https_fn.Response("El archivo no tiene ningun nombre")
+            return https_fn.Response("El archivo no tiene ningun nombre", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         extension = archivo.filename.split(".")[1]
 
         if not (extension == "jpg" or extension == "png"):
-            return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)")
+            return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         # Se hace una ubicacion nueva para que todos los archivos sean diferentes
         unique_id = str(uuid.uuid4())
@@ -70,7 +70,7 @@ def CrearEvento(request) -> https_fn.Response:
         res_validacion = query_validacion.get() 
 
         if res_validacion:
-            return https_fn.Response("Ya existe un evento con el nombre: " + nombre)
+            return https_fn.Response("Ya existe un evento con el nombre: " + nombre, headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         # Despues de la validacion, se procede a hacer crear el evento
 
@@ -83,7 +83,7 @@ def CrearEvento(request) -> https_fn.Response:
         fecha_final_utc5 = fecha_final + timedelta(hours=5)
 
         if(fecha_inicio > fecha_final):
-            return https_fn.Response("La fecha final es menor a la fecha inicial")
+            return https_fn.Response("La fecha final es menor a la fecha inicial", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         informacion = {
             "Nombre": nombre,
@@ -101,10 +101,10 @@ def CrearEvento(request) -> https_fn.Response:
         blob = firebase_storage.blob(ubicacion)
         blob.upload_from_file(archivo)
 
-        return https_fn.Response("Se creo el evento correctamente")
+        return https_fn.Response("Se creo el evento correctamente", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
     except Exception as e:
-        return https_fn.Response("Ocurrio un error creando el evento: " + str(e))
+        return https_fn.Response("Ocurrio un error creando el evento: " + str(e), headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
 # REQUIERE ROL DE admin 
 # [PUT] Esta funcion se encarga de modificar un evento
@@ -117,12 +117,12 @@ def ModificarEvento(request) -> https_fn.Response:
         
         # Se autoriza si el usuario tiene el rol adecuado
         if AutenticarMetodo(request=request, roles=['admin']) is None:
-            return https_fn.Response("Autorizacion denegada", status=401)
+            return https_fn.Response("Autorizacion denegada", status=401, headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         # Se validan y se obtienen el json
 
         if 'metadata' not in request.form:
-            return https_fn.Response("No se mando el JSONs")
+            return https_fn.Response("No se mando el JSONs", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         metadatos = request.form['metadata']
 
@@ -139,7 +139,7 @@ def ModificarEvento(request) -> https_fn.Response:
         res_validacion = query_validacion.get() 
 
         if (res_validacion and res_validacion[0].id != lugar):
-            return https_fn.Response("Ya existe un evento con el nombre: " + nombre)
+            return https_fn.Response("Ya existe un evento con el nombre: " + nombre, headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         # Despues de la validacion, se procede a hacer modificar el evento
 
@@ -152,7 +152,7 @@ def ModificarEvento(request) -> https_fn.Response:
         fecha_final_utc5 = fecha_final + timedelta(hours=5)
 
         if(fecha_inicio > fecha_final):
-            return https_fn.Response("La fecha final es menor a la fecha inicial")
+            return https_fn.Response("La fecha final es menor a la fecha inicial", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         informacion = {
             "Nombre": nombre,
@@ -171,12 +171,12 @@ def ModificarEvento(request) -> https_fn.Response:
             archivo = request.files['file']
 
             if archivo.filename == '':
-                return https_fn.Response("El archivo no tiene ningun nombre")
+                return https_fn.Response("El archivo no tiene ningun nombre", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
             extension = archivo.filename.split(".")[1]
 
             if not (extension == "jpg" or extension == "png"):
-                return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)")
+                return https_fn.Response("El archivo no tiene la extension adecuada (jpg, png)", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
 
             blob = firebase_storage.blob(url)
@@ -184,10 +184,10 @@ def ModificarEvento(request) -> https_fn.Response:
 
         nueva_ubicacion.update(informacion)
 
-        return https_fn.Response("Se modifico el evento correctamente")
+        return https_fn.Response("Se modifico el evento correctamente", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
     except Exception as e:
-        return https_fn.Response("Ocurrio un error creando el evento: " + str(e) + traceback.format_exc())
+        return https_fn.Response("Ocurrio un error creando el evento: " + str(e) + traceback.format_exc(), headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
 # REQUIERE ROL DE admin
 # [DELETE] Elimina un evento
@@ -198,11 +198,11 @@ def EliminarEvento(request) -> https_fn.Response:
 
         # Se autoriza si el usuario tiene el rol adecuado
         if AutenticarMetodo(request=request, roles=['admin']) is None:
-            return https_fn.Response("Autorizacion denegada", status=401)
+            return https_fn.Response("Autorizacion denegada", status=401, headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
         
         # Se valida el JSON y se obtiene el uuid
         if not request.is_json:
-            return https_fn.Response('No hay JSON')
+            return https_fn.Response('No hay JSON', headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
         parametros = request.get_json()
 
@@ -217,7 +217,7 @@ def EliminarEvento(request) -> https_fn.Response:
         blob.delete()
         ubicacion.delete()
 
-        return https_fn.Response("Se elimino el evento correctamente")
+        return https_fn.Response("Se elimino el evento correctamente", headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
 
     except Exception as e:
-        return https_fn.Response("Ocurrio un error borrando el evento: " + str(e))
+        return https_fn.Response("Ocurrio un error borrando el evento: " + str(e), headers={"Access-Control-Allow-Origin": "https://turismoeco-598e9.web.app"})
