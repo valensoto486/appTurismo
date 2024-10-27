@@ -10,12 +10,18 @@
 # funcion que se vaya a usar aca
 from firebase_functions import https_fn
 from firebase_admin import initialize_app
+from flask_cors import CORS
+from flask import Flask
 
 import firebaseConfig
 import json
 
 #from src.Autenticador.Autenticador import ProbarAuth
 #from src.Storage.Storage import ProbarStorage
+
+app = Flask(__name__)
+
+CORS(app=app, resources={r"/*": {"origins": "*"}})
 
 from src.Funciones.InicioSesion import CrearUsuario, AutenticarUsuario
 from src.Funciones.Ubicaciones import CrearUbicacion, ModificarUbicacion, EliminarUbicacion
