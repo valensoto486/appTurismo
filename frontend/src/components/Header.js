@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Header.css';
-import Eventos from '../pages/Eventos';
-import InformacionViajero from '../pages/InformacionViajero.js';
+// import Eventos from '../pages/Eventos';
+// import InformacionViajero from '../pages/InformacionViajero.js';
 import Logo from '../styles/images/Logo.png';
 import Usuario from '../styles/images/usuario.png'
 

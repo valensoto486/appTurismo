@@ -1,0 +1,96 @@
+.tourism-page {
+max-width: 1200px;
+margin: 0 auto;
+padding: 20px;
+font-family: Arial, sans-serif;
+}
+
+h1 {
+color: #333;
+text-align: center;
+margin-bottom: 20px;
+}
+
+.filter-search-container {
+display: flex;
+justify-content: space-between;
+margin-bottom: 20px;
+}
+
+.filter {
+width: 25%;
+padding: 15px;
+background-color: #f0f0f0;
+border-radius: 8px;
+}
+
+.filter h2 {
+margin-top: 0;
+margin-bottom: 10px;
+font-size: 18px;
+}
+
+.filter-options {
+display: flex;
+flex-direction: column;
+}
+
+.filter-options label {
+margin-bottom: 5px;
+}
+
+.search {
+width: 70%;
+}
+
+.search input {
+width: 100%;
+padding: 10px;
+border: 1px solid #ddd;
+border-radius: 5px;
+font-size: 16px;
+}
+
+.places-list {
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 20px;
+}
+
+.place-item {
+border: 1px solid #ddd;
+border-radius: 8px;
+overflow: hidden;
+transition: transform 0.3s ease;
+}
+
+.place-item:hover {
+transform: translateY(-5px);
+box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.place-image {
+width: 100%;
+height: 200px;
+object-fit: cover;
+}
+
+.place-info {
+padding: 15px;
+}
+
+.place-info h2 {
+margin-top: 0;
+color: #333;
+}
+
+.place-info p {
+color: #666;
+font-size: 14px;
+margin-bottom: 10px;
+}
+
+.place-type {
+font-weight: bold;
+color: #007bff;
+}

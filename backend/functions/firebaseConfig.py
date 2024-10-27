@@ -9,7 +9,7 @@ from firebase_admin import credentials, auth, storage, firestore
 try: 
 
     # Se cambio la inicializacion a las credenciales
-    credencial = credentials.Certificate('./credenciales.json')
+    credencial = credentials.Certificate('C:/Users/valen/Downloads/turismoeco-598e9-0bd78b91789f.json')
     firebase_admin.initialize_app(credencial, {
     'storageBucket': 'turismoeco-598e9.appspot.com'}) 
 

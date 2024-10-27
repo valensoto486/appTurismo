@@ -12585,6 +12585,56 @@
 "https://www.googleapis.com/auth/compute"
 ]
 },
+"reportHostAsFaulty": {
+"description": "Mark the host as faulty and try to restart the instance on a new host.",
+"flatPath": "projects/{project}/zones/{zone}/instances/{instance}/reportHostAsFaulty",
+"httpMethod": "POST",
+"id": "compute.instances.reportHostAsFaulty",
+"parameterOrder": [
+"project",
+"zone",
+"instance"
+],
+"parameters": {
+"instance": {
+"description": "Name of the instance scoping this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?|[1-9][0-9]{0,19}",
+"required": true,
+"type": "string"
+},
+"project": {
+"description": "Project ID for this request.",
+"location": "path",
+"pattern": "(?:(?:[-a-z0-9]{1,63}\\.)*(?:[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?):)?(?:[0-9]{1,19}|(?:[a-z0-9](?:[-a-z0-9]{0,61}[a-z0-9])?))",
+"required": true,
+"type": "string"
+},
+"requestId": {
+"description": "An optional request ID to identify requests. Specify a unique request ID so that if you must retry your request, the server will know to ignore the request if it has already been completed. For example, consider a situation where you make an initial request and the request times out. If you make the request again with the same request ID, the server can check if original operation with the same request ID was received, and if so, will ignore the second request. This prevents clients from accidentally creating duplicate commitments. The request ID must be a valid UUID with the exception that zero UUID is not supported ( 00000000-0000-0000-0000-000000000000).",
+"location": "query",
+"type": "string"
+},
+"zone": {
+"description": "The name of the zone for this request.",
+"location": "path",
+"pattern": "[a-z](?:[-a-z0-9]{0,61}[a-z0-9])?",
+"required": true,
+"type": "string"
+}
+},
+"path": "projects/{project}/zones/{zone}/instances/{instance}/reportHostAsFaulty",
+"request": {
+"$ref": "InstancesReportHostAsFaultyRequest"
+},
+"response": {
+"$ref": "Operation"
+},
+"scopes": [
+"https://www.googleapis.com/auth/cloud-platform",
+"https://www.googleapis.com/auth/compute"
+]
+},
 "reset": {
 "description": "Performs a reset on the instance. This is a hard reset. The VM does not do a graceful shutdown. For more information, see Resetting an instance.",
 "flatPath": "projects/{project}/zones/{zone}/instances/{instance}/reset",
@@ -45558,7 +45608,7 @@
 }
 }
 },
-"revision": "20240903",
+"revision": "20240919",
 "rootUrl": "https://compute.googleapis.com/",
 "schemas": {
 "AWSV4Signature": {
@@ -49032,6 +49082,13 @@ false
 "description": "[Output Only] Creation timestamp in RFC3339 text format.",
 "type": "string"
 },
+"customMetrics": {
+"description": "List of custom metrics that are used for the WEIGHTED_ROUND_ROBIN locality_lb_policy.",
+"items": {
+"$ref": "BackendServiceCustomMetric"
+},
+"type": "array"
+},
 "customRequestHeaders": {
 "description": "Headers that the load balancer adds to proxied requests. See [Creating custom headers](https://cloud.google.com/load-balancing/docs/custom-headers).",
 "items": {
@@ -49651,6 +49708,21 @@ false
 "",
 ""
 ],
+"type": "string"
+}
+},
+"type": "object"
+},
+"BackendServiceCustomMetric": {
+"description": "Custom Metrics are used for WEIGHTED_ROUND_ROBIN locality_lb_policy.",
+"id": "BackendServiceCustomMetric",
+"properties": {
+"dryRun": {
+"description": "If true, the metric data is not used for load balancing.",
+"type": "boolean"
+},
+"name": {
+"description": "Name of a custom utilization signal. The name must be 1-64 characters long and match the regular expression [a-z]([-_.a-z0-9]*[a-z0-9])? which means the first character must be a lowercase letter, and all following characters must be a dash, period, underscore, lowercase letter, or digit, except the last character, which cannot be a dash, period, or underscore. For usage guidelines, see Custom Metrics balancing mode. This field can only be used for a global or regional backend service with the loadBalancingScheme set to EXTERNAL_MANAGED, INTERNAL_MANAGED INTERNAL_SELF_MANAGED.",
 "type": "string"
 }
 },
@@ -50856,7 +50928,7 @@ false
 },
 "locationPolicy": {
 "$ref": "LocationPolicy",
-"description": "Policy for chosing target zone. For more information, see Create VMs in bulk ."
+"description": "Policy for choosing target zone. For more information, see Create VMs in bulk."
 },
 "minCount": {
 "description": "The minimum number of instances to create. If no min_count is specified then count is used as the default value. If min_count instances cannot be created, then no instances will be created and instances already created will be deleted.",
@@ -64601,6 +64673,42 @@ false
 },
 "type": "object"
 },
+"InstancesReportHostAsFaultyRequest": {
+"id": "InstancesReportHostAsFaultyRequest",
+"properties": {
+"faultReasons": {
+"items": {
+"$ref": "InstancesReportHostAsFaultyRequestFaultReason"
+},
+"type": "array"
+}
+},
+"type": "object"
+},
+"InstancesReportHostAsFaultyRequestFaultReason": {
+"id": "InstancesReportHostAsFaultyRequestFaultReason",
+"properties": {
+"behavior": {
+"enum": [
+"BEHAVIOR_UNSPECIFIED",
+"PERFORMANCE",
+"SILENT_DATA_CORRUPTION",
+"UNRECOVERABLE_GPU_ERROR"
+],
+"enumDescriptions": [
+"Public reportable behaviors",
+"",
+"",
+""
+],
+"type": "string"
+},
+"description": {
+"type": "string"
+}
+},
+"type": "object"
+},
 "InstancesResumeRequest": {
 "id": "InstancesResumeRequest",
 "properties": {
@@ -65584,7 +65692,7 @@ false
 "description": "Configuration for enabling Application Aware Interconnect (AAI) on this Cloud Interconnect connection between Google and your on-premises router."
 },
 "availableFeatures": {
-"description": "[Output only] List of features available for this Interconnect connection, which can take one of the following values: - MACSEC If present then the Interconnect connection is provisioned on MACsec capable hardware ports. If not present then the Interconnect connection is provisioned on non-MACsec capable ports and MACsec isn't supported and enabling MACsec fails.",
+"description": "[Output only] List of features available for this Interconnect connection, which can take one of the following values: - IF_MACSEC If present then the Interconnect connection is provisioned on MACsec capable hardware ports. If not present then the Interconnect connection is provisioned on non-MACsec capable ports and MACsec isn't supported and enabling MACsec fails.",
 "items": {
 "enum": [
 "IF_MACSEC"
@@ -65737,7 +65845,7 @@ false
 "type": "string"
 },
 "requestedFeatures": {
-"description": "Optional. List of features requested for this Interconnect connection, which can take one of the following values: - MACSEC If specified then the connection is created on MACsec capable hardware ports. If not specified, the default value is false, which allocates non-MACsec capable ports first if available. This parameter can be provided only with Interconnect INSERT. It isn't valid for Interconnect PATCH.",
+"description": "Optional. List of features requested for this Interconnect connection, which can take one of the following values: - IF_MACSEC If specified then the connection is created on MACsec capable hardware ports. If not specified, the default value is false, which allocates non-MACsec capable ports first if available. This parameter can be provided only with Interconnect INSERT. It isn't valid for Interconnect PATCH.",
 "items": {
 "enum": [
 "IF_MACSEC"
@@ -65867,6 +65975,7 @@ false
 "bandwidth": {
 "description": "Provisioned bandwidth capacity for the interconnect attachment. For attachments of type DEDICATED, the user can set the bandwidth. For attachments of type PARTNER, the Google Partner that is operating the interconnect must set the bandwidth. Output only for PARTNER type, mutable for PARTNER_PROVIDER and DEDICATED, and can take one of the following values: - BPS_50M: 50 Mbit/s - BPS_100M: 100 Mbit/s - BPS_200M: 200 Mbit/s - BPS_300M: 300 Mbit/s - BPS_400M: 400 Mbit/s - BPS_500M: 500 Mbit/s - BPS_1G: 1 Gbit/s - BPS_2G: 2 Gbit/s - BPS_5G: 5 Gbit/s - BPS_10G: 10 Gbit/s - BPS_20G: 20 Gbit/s - BPS_50G: 50 Gbit/s ",
 "enum": [
+"BPS_100G",
 "BPS_100M",
 "BPS_10G",
 "BPS_1G",
@@ -65881,6 +65990,7 @@ false
 "BPS_5G"
 ],
 "enumDescriptions": [
+"100 Gbit/s",
 "100 Mbit/s",
 "10 Gbit/s",
 "1 Gbit/s",

@@ -10,7 +10,13 @@ function Eventos() {
   useEffect(() => {
     const fetchEventos = async () => {
       try {
-        const eventosData = await fetch('https://buscareventos-jkomhrg5ba-uc.a.run.app'); // Llama a la función para obtener eventos
+        const response = await fetch('https://buscareventos-542819207454.us-central1.run.app');
+        if (!response.ok) {
+          throw new Error('Error en la respuesta del servidor');
+        }
+
+        const formData = await response.formData(); // Obtener los datos como FormData
+        const eventosData = JSON.parse(formData.get('documentos')); // Acceder al JSON desde FormData
         setEventos(eventosData);
       } catch (err) {
         setError('Error al cargar los eventos.'); // Manejo de errores
@@ -55,12 +61,12 @@ function Eventos() {
 
         <section className="eventos-lista">
           {eventos.map((evento) => (
-            <div key={evento.id} className="evento-card">
-              <img src={evento.imagen} alt={evento.titulo} />
+            <div key={evento.Id} className="evento-card">
+              <img src={evento.URLImagen} alt={evento.Titulo} />
               <div className="evento-info">
-                <h3>{evento.titulo}</h3>
-                <p>{evento.descripcion}</p>
-                <Link to={`/evento/${evento.id}`} className="btn-ver-mas">
+                <h3>{evento.Titulo}</h3>
+                <p>{evento.Descripcion}</p>
+                <Link to={`/evento/${evento.Id}`} className="btn-ver-mas">
                   Ver más
                 </Link>
               </div>
