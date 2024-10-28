@@ -1,22 +1,30 @@
 import React, { useState } from 'react';
+import { Link, useNavigate } from 'react-router-dom';
 import '../styles/RegistroLogin.css';
 
+// La pagina Register llama a la funcion crearusuario 
+// la funcion crearusuario recibe un JSON y retorna un text/html
+//Se accede a register desde la pagina login
 function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [mensaje, setMensaje] = useState('');
+  const [setCargando] = useState(false); // Estado de carga
+  const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
     event.preventDefault();
-
+    setCargando(true);
+  
     // Crear el objeto con los datos del nuevo usuario
     const newUser = {
       nombre: username,
       correo: email,
       contrasenia: password,
-      rol: 'usuario',  
+      rol: 'usuario',
     };
-    console.log(newUser);
+  
     try {
       // Realizar la solicitud al backend para crear un nuevo usuario
       const response = await fetch('https://crearusuario-jkomhrg5ba-uc.a.run.app', {
@@ -25,59 +33,72 @@ function Register() {
           'Content-Type': 'application/json',
         },
         body: JSON.stringify(newUser),
-        
       });
-
-      const data = await response.json();
+  
+      // Leer la respuesta como texto
+      const data = await response.text(); // Leer la respuesta como texto
+  
       console.log(data);
+  
       if (response.ok) {
-        // Registro exitoso
-        alert(`Registro exitoso! Bienvenido, ${username}`);
-        // Aquí puedes redirigir al usuario a la página de inicio de sesión o a otra página
+        // Intenta parsear el texto como JSON
+        try {
+          const jsonResponse = JSON.parse(data); // Intenta parsear el texto a JSON
+          setMensaje(`Registro exitoso! Bienvenido, ${jsonResponse.nombre || username}`);
+          navigate('/');
+        } catch (jsonError) {
+          // Si hay un error al parsear, manejarlo aquí
+          setMensaje(`Registro exitoso! Bienvenido, ${username}`);
+          navigate('/');
+        }
       } else {
         // Manejar errores en el registro
-        alert(`Error: ${data}`);
+        setMensaje(`Error: ${data}`);
       }
     } catch (error) {
       console.error('Error al registrar:', error);
-      alert('Hubo un error al intentar registrarte: $(error.message)');
+      setMensaje(`Hubo un error al intentar registrarse: ${error.message}`);
+    }finally{
+      setCargando(false); // Desactivar estado de carga
     }
   };
+  
 
   return (
-    <div>
+    <div className="registro-contenedor">
       <h2>Registro</h2>
+      {mensaje && <div className={mensaje.includes('exitoso') ? 'mensaje-exito' : 'mensaje-error'}>{mensaje}</div>}
       <form onSubmit={handleSubmit}>
-        <label>
-          Nombre de usuario:
+        <div className="grupo-formulario">
+          <label htmlFor="username">Nombre de usuario:</label>
           <input
+            id="username"
             type="text"
             value={username}
             onChange={(event) => setUsername(event.target.value)}
             required
           />
-        </label>
-        <br />
-        <label>
-          Correo electrónico:
+        </div>
+        <div className="grupo-formulario">
+          <label htmlFor="email">Correo electrónico:</label>
           <input
+            id="email"
             type="email"
             value={email}
             onChange={(event) => setEmail(event.target.value)}
             required
           />
-        </label>
-        <br />
-        <label>
-          Contraseña:
+        </div>
+        <div className="grupo-formulario">
+          <label htmlFor="password">Contraseña:</label>
           <input
+            id="password"
             type="password"
             value={password}
             onChange={(event) => setPassword(event.target.value)}
             required
           />
-        </label>
-        <br />
+        </div>
         <button type="submit">Registrarse</button>
       </form>
     </div>

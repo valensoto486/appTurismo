@@ -2,6 +2,9 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/RegistroLogin.css';
 
+// La pagina login llama a la funcion autenticarusuario para la verificación
+// la funcion autenticarusuario recibe un JSON y retorna un text/html
+// El login tambien se conecta al register.js 
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -17,7 +20,7 @@ function Login() {
     };
 
     try {
-      // Realizar la solicitud al backend
+      // Realizar la solicitud a la funcion autenticarusuario
       const response = await fetch('https://autenticarusuario-jkomhrg5ba-uc.a.run.app', {
         method: 'POST',
         headers: {
@@ -26,11 +29,12 @@ function Login() {
         body: JSON.stringify(userData),
       });
 
-      const data = await response.json();
+      // Leer la respuesta como text/html
+      const data = await response.text();
 
       if (response.ok) {
         // Si la autenticación fue exitosa, redirigir al usuario
-        alert(`Inicio de sesión exitoso! Token: ${data.Token}`);
+        alert(`Inicio de sesión exitoso! Respuesta: ${data}`);
         navigate('/');
       } else {
         // Manejar errores en la autenticación

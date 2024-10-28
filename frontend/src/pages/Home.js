@@ -1,19 +1,17 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
+import { Link } from 'react-router-dom';
 import elRetiro from '../styles/images/ElRetiro.jpg';
 import laCeja from '../styles/images/LaCeja.jpg';
 import elCarmen from '../styles/images/ElCarmen.jpg';
 import laUnion from '../styles/images/LaUnion.jpg';
 import rionegro from '../styles/images/Rionegro.jpg';
-import { Link } from 'react-router-dom';
 
 const Home = () => {
-  // Se verifica si una persona ha iniciado sesion o no 
-  // Si no ha iniciado sesion se muestra el btn de iniciar sesion, de lo contrario no
   const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [events, setEvents] = useState([]);
 
   useEffect(() => {
-    // Verifica si el usuario ha iniciado sesión
     const token = localStorage.getItem('authToken');
     setIsAuthenticated(!!token);
   }, []);
@@ -26,14 +24,52 @@ const Home = () => {
     'Rionegro': rionegro,
   };
 
+  useEffect(() => {
+    const fetchEvents = async () => {
+      try {
+        const response = await fetch('https://buscareventosinicio-jkomhrg5ba-uc.a.run.app');
+        if (!response.ok) throw new Error('Failed to fetch events');
+
+        // Procesa el `form-data`
+        const formData = await response.formData();
+
+        // Verifica si `documentos` está presente en el `form-data`
+        const jsonDocument = formData.get('documentos');
+        if (!jsonDocument) {
+          console.error("No se encontró el JSON de documentos en el form-data");
+          return;
+        }
+
+        // Convierte el archivo JSON en texto y luego a un objeto
+        const jsonText = await jsonDocument.text();
+        const eventsData = JSON.parse(jsonText);
+
+        // Extrae las imágenes
+        const eventsWithImages = eventsData.map(event => {
+          const imageFile = formData.get(event.URLImagen); // `URLImagen` es el nombre de cada archivo en el form-data
+          if (imageFile) {
+            event.imageUrl = URL.createObjectURL(imageFile);
+          }
+          return event;
+        });
+
+        setEvents(eventsWithImages);
+      } catch (error) {
+        console.error('Error fetching events:', error);
+      }
+    };
+
+    fetchEvents();
+  }, []);
+
+
   return (
     <main className="home">
       <section className="hero">
         <div className="container">
-        {/* Solo se muestra el btn si no ha iniciado sesion */}
-        {!isAuthenticated && (
-          <Link className="btn" to="/login">Iniciar Sesión</Link>
-        )}
+          {!isAuthenticated && (
+            <Link className="btn" to="/login">Iniciar Sesión</Link>
+          )}
         </div>
       </section>
 
@@ -64,11 +100,13 @@ const Home = () => {
         <div className="container2">
           <h2>Eventos</h2>
           <div className="events-grid">
-            {[1, 2, 3, 4].map((num) => (
-              <div key={num} className="event-card">
-                <h3>Evento {num}</h3>
-                <img src={`/event-${num}.jpg`} alt={`Evento ${num}`} />
-                <p>Descripción breve del evento {num}. Fecha y lugar del evento.</p>
+            {events.map((event, index) => (
+              <div key={index} className="event-card">
+                <h3>{event.Nombre}</h3>
+                <img src={event.imageUrl} alt={`Evento ${event.Nombre}`} />
+                <p>{event.Descripcion}</p>
+                <p>Fecha de inicio: {event.Comienza}</p>
+                <p>Fecha de término: {event.Termina}</p>
               </div>
             ))}
           </div>

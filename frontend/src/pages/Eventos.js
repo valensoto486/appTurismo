@@ -1,31 +1,52 @@
-import React, { useEffect, useState } from 'react';
-import { Link } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';  
 import '../styles/Eventos.css';
 
+// La pagina Eventos llama por medio de un GET a la funcion buscareventos
+// buscareventos retorna un multipart/form-data 
+// form-data: JSON de la lista de los eventos y una lista de sus imagenes
+// Los eventos se muestran como un listado con su foto, titulo y breve descripcion
 function Eventos() {
   const [eventos, setEventos] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    const fetchEventos = async () => {
+    const fetchEvents = async () => {
       try {
-        const response = await fetch('https://buscareventos-542819207454.us-central1.run.app');
-        if (!response.ok) {
-          throw new Error('Error en la respuesta del servidor');
+        const response = await fetch('https://buscareventos-jkomhrg5ba-uc.a.run.app');
+        if (!response.ok) throw new Error('Failed to fetch events');
+
+        const formData = await response.formData();
+        const jsonDocument = formData.get('documentos');
+        
+        if (!jsonDocument) {
+          console.error("No se encontró el JSON de documentos en el form-data");
+          setError("No se encontraron datos de eventos");
+          setLoading(false);
+          return;
         }
 
-        const formData = await response.formData(); // Obtener los datos como FormData
-        const eventosData = JSON.parse(formData.get('documentos')); // Acceder al JSON desde FormData
-        setEventos(eventosData);
-      } catch (err) {
-        setError('Error al cargar los eventos.'); // Manejo de errores
-      } finally {
+        const jsonText = await jsonDocument.text();
+        const eventsData = JSON.parse(jsonText);
+
+        const eventsWithImages = eventsData.map(event => {
+          const imageFile = formData.get(event.URLImagen);
+          if (imageFile) {
+            event.imageUrl = URL.createObjectURL(imageFile);
+          }
+          return event;
+        });
+
+        setEventos(eventsWithImages);
+        setLoading(false);
+      } catch (error) {
+        console.error('Error al cargar los eventos:', error);
+        setError("Error al cargar los eventos");
         setLoading(false);
       }
     };
 
-    fetchEventos();
+    fetchEvents();
   }, []);
 
   if (loading) {
@@ -36,11 +57,15 @@ function Eventos() {
     return <div>{error}</div>;
   }
 
+  if (eventos.length === 0) {
+    return <div>No hay eventos disponibles.</div>;
+  }
+
   return (
     <div className="eventos-page">
       <header className="eventos-header">
         <div className="container">
-          {/* <h1>Eventos</h1> */}
+          <h1>Eventos</h1>
         </div>
       </header>
 
@@ -52,27 +77,16 @@ function Eventos() {
           </p>
         </section>
 
-        <section className="eventos-imagen">
-          <img
-            src="/placeholder.svg?height=300&width=800"
-            alt="Eventos de turismo sostenible"
-          />
-        </section>
-
-        <section className="eventos-lista">
+        <div className="eventos-list">
           {eventos.map((evento) => (
-            <div key={evento.Id} className="evento-card">
-              <img src={evento.URLImagen} alt={evento.Titulo} />
-              <div className="evento-info">
-                <h3>{evento.Titulo}</h3>
-                <p>{evento.Descripcion}</p>
-                <Link to={`/evento/${evento.Id}`} className="btn-ver-mas">
-                  Ver más
-                </Link>
-              </div>
+            <div key={evento.Id} className="evento">
+              <img src={evento.imageUrl} alt={evento.Nombre} />
+              <h2>{evento.Nombre}</h2>
+              <p>{evento.Descripcion}</p>
+              <p>{evento.Comienza} - {evento.Termina}</p>
             </div>
           ))}
-        </section>
+        </div>
       </main>
     </div>
   );
