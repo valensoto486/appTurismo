@@ -11,25 +11,40 @@ const TourismPage = ({ city }) => {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-        const response = await fetch(`https://your-backend-url.com/api/places?city=${city}`);
+      
+        const response = await fetch(`https://buscarubicacionespormunicipio-jkomhrg5ba-uc.a.run.app?municipio=${encodeURIComponent(city)}`);
+      
         if (!response.ok) {
           throw new Error('Failed to fetch places');
         }
-        const data = await response.json();
-        setPlaces(data);
+      
+        const responseText = await response.text(); // Cambia de JSON a texto
+        console.log(responseText); // Imprime el contenido de la respuesta para ver qué se está devolviendo
+    
+        // Intenta parsear el contenido como JSON si es aplicable
+        let placesData;
+        try {
+          placesData = JSON.parse(responseText);
+        } catch (e) {
+          throw new Error('Failed to parse JSON');
+        }
+    
+        setPlaces(placesData);
       } catch (err) {
         setError(err.message);
       } finally {
         setLoading(false);
       }
     };
-
+    
+  
     fetchPlaces();
   }, [city]);
-
+  
+  // Filtra los lugares según el término de búsqueda
   const filteredPlaces = places.filter(place =>
-    place.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );
+    place && place.name && place.name.toLowerCase().includes(searchTerm.toLowerCase())
+  );  
 
   return (
     <div className="tourism-page">
@@ -67,17 +82,18 @@ const TourismPage = ({ city }) => {
         <div className="places-list">
           {filteredPlaces.length > 0 ? (
             filteredPlaces.map((place) => (
-              <div key={place.id} className="place-item">
-                <img src={place.image} alt={place.name} className="place-image" />
-                <div className="place-info">
-                  <h2>{place.name}</h2>
-                  <p>{place.description}</p>
-                  <p className="place-type">{place.type}</p>
-                </div>
+              <div key={place.Id} className="place-item">
+                {place.imageUrl ? (
+                  <img src={place.imageUrl} alt={place.name} className="place-image" />
+                ) : (
+                  <p>Imagen no disponible</p>
+                )}
+                <h3>{place.name}</h3>
+                <p>{place.description}</p>
               </div>
             ))
           ) : (
-            <p>No se encontraron lugares para esta búsqueda.</p>
+            <p>No se encontraron lugares.</p>
           )}
         </div>
       )}

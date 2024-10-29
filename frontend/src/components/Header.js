@@ -49,10 +49,10 @@ const Header = () => {
             <li className="dropdown">
               <span>Descubre el Oriente</span>
               <ul className="dropdown-menu">
-                <li><Link to="/Municipios">El Retiro</Link></li>
-                <li><Link to="/la-ceja">La Ceja</Link></li>
-                <li><Link to="/el-carmen">El Carmen</Link></li>
-                <li><Link to="/la-union">La Unión</Link></li>
+                <li><Link to="/elretiro">El Retiro</Link></li>
+                <li><Link to="/laceja">La Ceja</Link></li>
+                <li><Link to="/elcarmen">El Carmen</Link></li>
+                <li><Link to="/launion">La Unión</Link></li>
                 <li><Link to="/rionegro">Rionegro</Link></li>
               </ul>
             </li>

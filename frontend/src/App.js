@@ -10,6 +10,10 @@ import EventoDetalle from './pages/EventoDetalle.js';
 import Login from './pages/login.js';
 import Register from './pages/register.js';
 import Rionegro from './pages/Rionegro.js';
+import LaUnion from './pages/LaUnion.js';
+import LaCeja from './pages/LaCeja.js';
+import ElRetiro from './pages/ElRetiro.js';
+import ElCarmen from './pages/ElCarmen.js';
 
 function App() {
   return (
@@ -24,7 +28,11 @@ function App() {
           <Route path="/login" element={<Login />} />
           <Route path="/register" element={<Register />} />
           <Route path="/rionegro" element={<Rionegro />} />
-
+          <Route path="/launion" element={<LaUnion />} />
+          <Route path="/laceja" element={<LaCeja />} />
+          <Route path="/elretiro" element={<ElRetiro />} />
+          <Route path="/elcarmen" element={<ElCarmen />} />
+          
         </Routes>
         <Footer />
       </div>
