@@ -1,38 +1,65 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Header.css';
-// import Eventos from '../pages/Eventos';
-// import InformacionViajero from '../pages/InformacionViajero.js';
 import Logo from '../styles/images/Logo.png';
-import Usuario from '../styles/images/usuario.png'
 
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [username, setUsername] = useState('');
-  const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
+  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar rol admin
   const navigate = useNavigate();
 
-  useEffect(() => {
-    // Verificar si el usuario ha iniciado sesión
+  // Función para verificar el estado de autenticación y el rol al cargar el componente
+  const checkAuth = () => {
     const token = localStorage.getItem('authToken');
-    const storedUsername = localStorage.getItem('username');
-    if (token && storedUsername) {
-      setIsAuthenticated(true);
-      setUsername(storedUsername);
-    }
+    const role = localStorage.getItem('userRole'); // Obtener rol
+    setIsAuthenticated(!!token);
+    setIsAdmin(role === 'admin'); // Verificar si es admin
+  };
+
+  // useEffect para comprobar la autenticación al montar el componente
+  useEffect(() => {
+    checkAuth(); // Verificar autenticación al iniciar
+  }, []);
+
+  // useEffect para actualizar la autenticación en tiempo real
+  useEffect(() => {
+    const handleStorageChange = () => {
+      checkAuth(); // Comprobar autenticación si hay un cambio en localStorage
+    };
+
+    window.addEventListener('storage', handleStorageChange); // Escuchar cambios en el almacenamiento
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange); // Limpiar el evento al desmontar
+    };
   }, []);
 
   const handleLogout = () => {
-    // Cerrar sesión: elimina el token y el nombre de usuario de localStorage
     localStorage.removeItem('authToken');
-    localStorage.removeItem('username');
-    setIsAuthenticated(false);
-    setUsername('');
-    setIsUserMenuOpen(false);
-    navigate('/'); // Redirige al usuario a la página de inicio de sesión
+    localStorage.removeItem('userRole'); // Limpiar el rol al cerrar sesión
+    checkAuth(); // Actualiza el estado de autenticación
+    navigate('/');
   };
 
+  const toggleDropdown = () => {
+    setIsOpen(prev => !prev); // Alternar el estado del menú desplegable
+  };
+
+  // Cerrar el menú desplegable al hacer clic fuera
+  const handleClickOutside = (event) => {
+    const userMenu = document.querySelector('.user-menu');
+    if (userMenu && !userMenu.contains(event.target)) {
+      setIsOpen(false);
+    }
+  };
+
+  useEffect(() => {
+    document.addEventListener('click', handleClickOutside);
+    return () => {
+      document.removeEventListener('click', handleClickOutside);
+    };
+  }, []);
 
   return (
     <header className="header">
@@ -68,22 +95,19 @@ const Header = () => {
             </li>
           </ul>
 
-          {/* Icono superior derecho 
-           Aparece solo cuando la peersona ha iniciado sesion 
-           Da la opcion de cerrar sesion en el menu desplegable */}
+          {/* Ícono de usuario que despliega el menú */}
           {isAuthenticated && (
             <div className="user-menu">
-              <img 
-                src={Usuario} 
-                alt="User Icon" 
-                className="user-icon" 
-                onClick={() => setIsUserMenuOpen(!isUserMenuOpen)} 
-              />
-              <span className="username">{username}</span>
-              {isUserMenuOpen && (
-                <ul className="user-dropdown">
-                  <li onClick={handleLogout}>Cerrar sesión</li>
-                </ul>
+              <button onClick={toggleDropdown} className="user-icon">
+                👤 {/* Puedes usar una imagen o un ícono de tu elección */}
+              </button>
+              {isOpen && (
+                <div className="dropdown-menu">
+                  {isAdmin && (
+                    <Link to="/dashboardAdmin" className="dropdown-item">Dashboard</Link>
+                  )}
+                  <button className="dropdown-item" onClick={handleLogout}>Cerrar sesión</button>
+                </div>
               )}
             </div>
           )}
@@ -94,3 +118,4 @@ const Header = () => {
 };
 
 export default Header;
+

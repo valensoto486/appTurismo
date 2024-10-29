@@ -2,9 +2,10 @@ import React, { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/RegistroLogin.css';
 
-// La pagina login llama a la funcion autenticarusuario para la verificación
-// la funcion autenticarusuario recibe un JSON y retorna un text/html
-// El login tambien se conecta al register.js 
+// Pagina de Login le realiza un POST a la funcion autenticarusuario 
+// Envia en un JSON parametros correo y contrasenia
+// La pagina Register se conecta directamente aca
+// Al loguearse en el LocalStorage se guarda el token
 function Login() {
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
@@ -13,14 +14,12 @@ function Login() {
   const handleSubmit = async (event) => {
     event.preventDefault();
     
-    // Crear el objeto con los datos de inicio de sesión
     const userData = {
       correo: email,
       contrasenia: password,
     };
-
+  
     try {
-      // Realizar la solicitud a la funcion autenticarusuario
       const response = await fetch('https://autenticarusuario-jkomhrg5ba-uc.a.run.app', {
         method: 'POST',
         headers: {
@@ -28,23 +27,37 @@ function Login() {
         },
         body: JSON.stringify(userData),
       });
-
-      // Leer la respuesta como text/html
-      const data = await response.text();
-
+  
+      // Primero, lee la respuesta como texto
+      const textResponse = await response.text(); 
+  
+      // Luego verifica si la respuesta es un JSON válido
+      let data;
+      try {
+        data = JSON.parse(textResponse); // Intenta convertir a JSON
+      } catch (e) {
+        // Si no es JSON, puedes manejarlo como un error
+        alert(`Error: ${textResponse}`); // Muestra el mensaje de error
+        return;
+      }
+  
+      // Verifica si la respuesta indica éxito
       if (response.ok) {
-        // Si la autenticación fue exitosa, redirigir al usuario
-        alert(`Inicio de sesión exitoso! Respuesta: ${data}`);
-        navigate('/');
+        localStorage.setItem('authToken', data.Token); // Guardar el token
+        localStorage.setItem('userRole', data.role); // Guarda el rol
+        alert(`Inicio de sesión exitoso!`);
+        navigate('/'); // Redirigir a la página de inicio
       } else {
-        // Manejar errores en la autenticación
-        alert(`Error: ${data}`);
+        // Si la autenticación falló, mostrar el mensaje de error
+        alert(`Error: ${data.error || textResponse}`); // Muestra el mensaje de error, en caso de que no tenga clave 'error'
       }
     } catch (error) {
       console.error('Error al autenticar:', error);
       alert('Hubo un error al intentar iniciar sesión');
     }
   };
+  
+  
 
   return (
     <div>

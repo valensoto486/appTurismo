@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react';
 import '../styles/Home.css';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import elRetiro from '../styles/images/ElRetiro.jpg';
 import laCeja from '../styles/images/LaCeja.jpg';
 import elCarmen from '../styles/images/ElCarmen.jpg';
@@ -10,11 +10,38 @@ import rionegro from '../styles/images/Rionegro.jpg';
 const Home = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [events, setEvents] = useState([]);
+  const navigate = useNavigate(); // Hook para la navegación
 
-  useEffect(() => {
+  // Función para verificar el estado de autenticación
+  const checkAuth = () => {
     const token = localStorage.getItem('authToken');
-    setIsAuthenticated(!!token);
+    setIsAuthenticated(!!token); // Si hay un token, isAuthenticated será true
+  };
+
+  // useEffect para comprobar la autenticación al montar el componente
+  useEffect(() => {
+    checkAuth(); // Verificar autenticación al iniciar
   }, []);
+
+  // useEffect para actualizar la autenticación en tiempo real
+  useEffect(() => {
+    const handleStorageChange = () => {
+      checkAuth(); // Comprobar autenticación si hay un cambio en localStorage
+    };
+
+    window.addEventListener('storage', handleStorageChange); // Escuchar cambios en el almacenamiento
+
+    return () => {
+      window.removeEventListener('storage', handleStorageChange); // Limpiar el evento al desmontar
+    };
+  }, []);
+
+  // Función para manejar el cierre de sesión
+  const handleLogout = () => {
+    localStorage.removeItem('authToken'); // Eliminar el token
+    setIsAuthenticated(false); // Actualizar el estado de autenticación
+    navigate('/login'); // Redirigir al usuario a la página de login
+  };
 
   const cityImages = {
     'El Retiro': elRetiro,
@@ -55,13 +82,12 @@ const Home = () => {
 
         setEvents(eventsWithImages);
       } catch (error) {
-        console.error('Error fetching events:', error);
+        console.error('Error al cargar los eventos:', error);
       }
     };
 
     fetchEvents();
   }, []);
-
 
   return (
     <main className="home">

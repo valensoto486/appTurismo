@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import '../styles/TurismPage.css';
 
-const TourismPage = ({ city }) => {
+const TourismPage = ({ municipio }) => {
   const [places, setPlaces] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
@@ -11,44 +11,62 @@ const TourismPage = ({ city }) => {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-      
-        const response = await fetch(`https://buscarubicacionespormunicipio-jkomhrg5ba-uc.a.run.app?municipio=${encodeURIComponent(city)}`);
-      
+
+        const response = await fetch('https://buscarubicacionespormunicipio-jkomhrg5ba-uc.a.run.app/', {
+          method: 'POST',
+          body: JSON.stringify({ "Municipio": municipio }),
+          headers: {
+            'Content-Type': 'application/json'
+          }
+        });
+
         if (!response.ok) {
           throw new Error('Failed to fetch places');
         }
-      
-        const responseText = await response.text(); // Cambia de JSON a texto
-        console.log(responseText); // Imprime el contenido de la respuesta para ver qué se está devolviendo
-    
-        // Intenta parsear el contenido como JSON si es aplicable
-        let placesData;
-        try {
-          placesData = JSON.parse(responseText);
-        } catch (e) {
-          throw new Error('Failed to parse JSON');
+
+        // Lee la respuesta como FormData
+        const formData = await response.formData();
+        const jsonDocument = formData.get('documentos');
+
+        if (!jsonDocument) {
+          console.error("No se encontró el JSON de documentos en el form-data");
+          setError("No se encontraron datos de lugares");
+          setLoading(false);
+          return;
         }
-    
-        setPlaces(placesData);
+
+        const jsonText = await jsonDocument.text();
+        const placesData = JSON.parse(jsonText);
+
+        // Asocia las imágenes a los lugares
+        const placesWithImages = placesData.map(place => {
+          const imageFile = formData.get(place.URLImagen);
+          if (imageFile) {
+            place.imageUrl = URL.createObjectURL(imageFile);
+          }
+          return place;
+        });
+
+        setPlaces(placesWithImages);
+        setLoading(false);
       } catch (err) {
-        setError(err.message);
-      } finally {
+        console.error('Error al cargar los lugares:', err);
+        setError("Error al cargar los lugares");
         setLoading(false);
       }
     };
-    
-  
+
     fetchPlaces();
-  }, [city]);
-  
+  }, [municipio]);
+
   // Filtra los lugares según el término de búsqueda
   const filteredPlaces = places.filter(place =>
     place && place.name && place.name.toLowerCase().includes(searchTerm.toLowerCase())
-  );  
+  );
 
   return (
     <div className="tourism-page">
-      <h1>Descubre {city}</h1>
+      <h1>Descubre {municipio}</h1>
       <div className="filter-search-container">
         <div className="filter">
           <h2>Filtros</h2>
@@ -81,8 +99,8 @@ const TourismPage = ({ city }) => {
       ) : (
         <div className="places-list">
           {filteredPlaces.length > 0 ? (
-            filteredPlaces.map((place) => (
-              <div key={place.Id} className="place-item">
+            filteredPlaces.map((place, index) => (
+              <div key={index} className="place-item">
                 {place.imageUrl ? (
                   <img src={place.imageUrl} alt={place.name} className="place-image" />
                 ) : (
