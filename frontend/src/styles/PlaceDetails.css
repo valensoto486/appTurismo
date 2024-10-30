@@ -1,30 +1,95 @@
-/* TurismPage.css */
 .place-details {
     padding: 20px;
-    text-align: center;
 }
 
 .back-button {
-    position: absolute;
-    top: 20px;
-    left: 20px;
-    font-size: 24px;
+    background-color: rgba(1, 70, 1, 0.671);
+    padding: 8px 12px; /* Aumenta el padding para mejor visibilidad */
+    border: none;
     cursor: pointer;
+    position: absolute; /* Coloca el botón en una posición fija */
+    top: 20px; /* Espacio desde el borde superior */
+    left: 20px; /* Espacio desde el borde izquierdo */
 }
 
-.place-title {
-    font-size: 2rem;
-    margin-top: 20px;
+.place-content {
+    display: flex;
+    align-items: flex-start;
+    margin-top: 60px; /* Espacio para que no tape el botón de volver */
 }
 
 .place-image-large {
-    width: 100%;
-    max-width: 600px;
-    margin: 20px auto;
+    width: 50vw; /* Ocupa el 50% del ancho de la ventana */
+    height: auto;
+    margin-right: 20px;
+    border-radius: 8px;
+    }
+
+.place-info {
+    max-width: 50vw; /* También ocupa el 50% del ancho de la ventana */
+}
+
+.place-title {
+    color: rgb(1, 48, 1) ;
+    font-size: 40px; /* Aumenta el tamaño del título */
+    margin-bottom: 10px;
 }
 
 .place-description {
+    color: rgb(1, 46, 1);
+    font-size: 30px; /* Aumenta el tamaño de la descripción */
+    margin-bottom: 20px;
+}
+
+.google-maps-button {
+    display: inline-block;
+    padding: 12px 20px; /* Aumenta el padding del botón */
+    background-color: #4286f4cb;
+    color: white;
+    text-decoration: none;
+    border-radius: 4px;
+    font-size: 18px; /* Aumenta el tamaño de la fuente del botón */
+    margin-top: 10px; /* Agrega margen superior */
+}
+
+.rating-section {
+    margin-top: 20px;
+}
+
+.rating-option {
+    margin-bottom: 1rem;
+}
+
+.star-rating {
+    display: inline-block;
+    cursor: pointer;
+}
+
+.star {
+    font-size: 24px;
+    color: rgb(186, 186, 186);
+    padding-right: 4px;
+}
+
+.star.filled {
+    color: gold;
+}
+
+.comment-section textarea {
+    width: 100%;
+    height: 100px;
+    margin-top: 1rem;
+    padding: 8px;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+}
+
+button {
+    padding: 10px 20px;
     margin-top: 10px;
-    font-size: 1.2rem;
+    background-color: rgb(2, 113, 2);
+    color: white;
+    border: none;
+    cursor: pointer;
 }
   

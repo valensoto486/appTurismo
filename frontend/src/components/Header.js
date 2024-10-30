@@ -38,6 +38,28 @@ const Header = () => {
     navigate('/'); 
   };
 
+  const handleLanguageChange = (language) => {
+    // Cargar el script de Google Translate si no se ha cargado
+    if (!document.getElementById('google_translate_script')) {
+      const googleTranslateScript = document.createElement('script');
+      googleTranslateScript.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
+      googleTranslateScript.id = 'google_translate_script';
+      document.body.appendChild(googleTranslateScript);
+    }
+
+    // Cambiar el idioma una vez que el script esté cargado
+    const interval = setInterval(() => {
+      const translateElement = document.getElementById('google_translate_element');
+      if (translateElement) {
+        const selectElement = translateElement.getElementsByTagName('select')[0];
+        selectElement.value = language;
+        selectElement.dispatchEvent(new Event('change'));
+        clearInterval(interval); // Limpiar el intervalo
+      }
+    }, 100); // Verificar cada 100ms
+  };
+
+
   return (
     <header className="header">
       <div className="container">
@@ -65,9 +87,9 @@ const Header = () => {
             <li className="dropdown">
               <span>Idioma</span>
               <ul className="dropdown-menu">
-                <li><button>Español</button></li>
-                <li><button>English</button></li>
-                <li><button>Français</button></li>
+                <li><button onClick={() => handleLanguageChange('es')}>Español</button></li>
+                <li><button onClick={() => handleLanguageChange('en')}>English</button></li>
+                <li><button onClick={() => handleLanguageChange('fr')}>Français</button></li>
               </ul>
             </li>
           </ul>

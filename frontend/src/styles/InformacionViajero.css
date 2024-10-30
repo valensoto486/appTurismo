@@ -46,6 +46,12 @@
 .info-section p {
     color: #2f855a;
 }
+
+.informacion-imagen {
+    display: flex; 
+    justify-content: center; 
+    width: 100%; 
+}
   
 .informacion-imagen img {
     width: 50%;
