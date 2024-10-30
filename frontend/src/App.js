@@ -14,6 +14,8 @@ import LaUnion from './pages/LaUnion.js';
 import LaCeja from './pages/LaCeja.js';
 import ElRetiro from './pages/ElRetiro.js';
 import ElCarmen from './pages/ElCarmen.js';
+import Dashboard from './pages/DashboardAdmin.js';
+import PlaceDetails from './components/PlaceDetails.js';
 
 function App() {
   return (
@@ -32,7 +34,8 @@ function App() {
           <Route path="/laceja" element={<LaCeja />} />
           <Route path="/elretiro" element={<ElRetiro />} />
           <Route path="/elcarmen" element={<ElCarmen />} />
-          
+          <Route path="/dashboardAdmin" element={<Dashboard />} />
+          <Route path="/placedetails" element={<PlaceDetails />} />
         </Routes>
         <Footer />
       </div>

@@ -6,15 +6,12 @@ import Logo from '../styles/images/Logo.png';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [isAdmin, setIsAdmin] = useState(false); // Estado para verificar rol admin
   const navigate = useNavigate();
 
-  // Función para verificar el estado de autenticación y el rol al cargar el componente
+  // Función para verificar el estado de autenticación al cargar el componente
   const checkAuth = () => {
     const token = localStorage.getItem('authToken');
-    const role = localStorage.getItem('userRole'); // Obtener rol
     setIsAuthenticated(!!token);
-    setIsAdmin(role === 'admin'); // Verificar si es admin
   };
 
   // useEffect para comprobar la autenticación al montar el componente
@@ -37,29 +34,9 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole'); // Limpiar el rol al cerrar sesión
     checkAuth(); // Actualiza el estado de autenticación
-    navigate('/');
+    navigate('/'); 
   };
-
-  const toggleDropdown = () => {
-    setIsOpen(prev => !prev); // Alternar el estado del menú desplegable
-  };
-
-  // Cerrar el menú desplegable al hacer clic fuera
-  const handleClickOutside = (event) => {
-    const userMenu = document.querySelector('.user-menu');
-    if (userMenu && !userMenu.contains(event.target)) {
-      setIsOpen(false);
-    }
-  };
-
-  useEffect(() => {
-    document.addEventListener('click', handleClickOutside);
-    return () => {
-      document.removeEventListener('click', handleClickOutside);
-    };
-  }, []);
 
   return (
     <header className="header">
@@ -95,20 +72,12 @@ const Header = () => {
             </li>
           </ul>
 
-          {/* Ícono de usuario que despliega el menú */}
+          {/* Botón de cerrar sesión que aparece solo cuando el usuario ha iniciado sesión */}
           {isAuthenticated && (
             <div className="user-menu">
-              <button onClick={toggleDropdown} className="user-icon">
-                👤 {/* Puedes usar una imagen o un ícono de tu elección */}
+              <button className="logout-button" onClick={handleLogout}>
+                Cerrar sesión
               </button>
-              {isOpen && (
-                <div className="dropdown-menu">
-                  {isAdmin && (
-                    <Link to="/dashboardAdmin" className="dropdown-item">Dashboard</Link>
-                  )}
-                  <button className="dropdown-item" onClick={handleLogout}>Cerrar sesión</button>
-                </div>
-              )}
             </div>
           )}
         </nav>
@@ -118,4 +87,3 @@ const Header = () => {
 };
 
 export default Header;
-

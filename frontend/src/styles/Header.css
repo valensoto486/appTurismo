@@ -111,23 +111,34 @@
   }
 }
 
-/* Estilos para el botón de cerrar sesión */
+/* Estilos para el icono de usuario */
 .user-menu {
-  display: flex;
-  align-items: center;
+  position: relative;
 }
 
-.logout-button {
-  background-color: white; 
-  color: rgb(1, 70, 1); 
+.user-icon {
+  background: none;
   border: none;
-  padding: 10px 15px; 
-  margin-left: 1rem; /* Espaciado entre los elementos */
-  cursor: pointer; 
-  border-radius: 5px;
-  height: 40px; /* Asegurando que el botón tenga la misma altura que el logo */
+  cursor: pointer;
+  font-size: 1.5rem; /* Ajusta el tamaño del ícono */
 }
 
-.logout-button:hover {
-  background-color: rgb(181, 217, 181); /* Color de fondo más oscuro al pasar el mouse */
+.dropdown-menu {
+  position: absolute;
+  top: 100%; /* Asegúrate de que el menú aparezca justo debajo del ícono */
+  right: 0; /* Alinea a la derecha */
+  background: white; /* O el color que prefieras */
+  border: 1px solid #ccc; /* Borde para el menú */
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Sombra para el menú */
+  z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
 }
+
+.dropdown-item {
+  padding: 10px 20px; /* Espaciado para los elementos del menú */
+  cursor: pointer;
+}
+
+.dropdown-item:hover {
+  background-color: #f0f0f0; /* Cambiar color de fondo al pasar el mouse */
+}
+
