@@ -1,96 +1,109 @@
 .tourism-page {
-max-width: 1200px;
-margin: 0 auto;
-padding: 20px;
-font-family: Arial, sans-serif;
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 20px;
+    font-family: Arial, sans-serif;
 }
 
-h1 {
-color: #333;
-text-align: center;
-margin-bottom: 20px;
+.tourism-page h1 {
+    color: #333;
+    text-align: left;
+    margin-bottom: 20px;
+    font-size: 2rem;
+    text-shadow: 2px 2px 4px rgba(1, 48, 4, 0.164);
+    background: linear-gradient(80deg, rgb(12, 133, 1), rgb(12, 133, 1)); 
+    -webkit-background-clip: text; 
+    -webkit-text-fill-color: transparent; 
 }
 
 .filter-search-container {
-display: flex;
-justify-content: space-between;
-margin-bottom: 20px;
+    padding-top: 1.8rem;
+    display: flex; 
+    align-items: center; 
+    justify-content: space-between; 
+    margin-bottom: 30px; 
 }
 
 .filter {
-width: 25%;
-padding: 15px;
-background-color: #f0f0f0;
-border-radius: 8px;
+    position: relative;
+    margin-right: 4rem; 
+    margin-top: -1rem;
+    font-size: 1.3rem;
 }
 
 .filter h2 {
-margin-top: 0;
-margin-bottom: 10px;
-font-size: 18px;
+    cursor: pointer; 
 }
 
 .filter-options {
-display: flex;
-flex-direction: column;
+    background-color: rgb(255, 255, 255); 
+    border: 1px solid #ddd; 
+    border-radius: 6px; 
+    padding: 20px; 
+    position: absolute; 
+    top: 100%; 
+    left: 0;
+    width: 270%; 
+    z-index: 1000; 
 }
 
 .filter-options label {
-margin-bottom: 5px;
+    display: block; 
+    margin: 0.5rem 0; 
 }
 
 .search {
-width: 70%;
+    flex-grow: 1; 
 }
 
 .search input {
-width: 100%;
-padding: 10px;
-border: 1px solid #ddd;
-border-radius: 5px;
-font-size: 16px;
+    width: 100%; 
+    padding: 0.5rem; /* Espaciado interno */
+    border: 1px solid #ddd; /* Borde ligero */
+    border-radius: 4px; /* Bordes redondeados */
 }
 
+
 .places-list {
-display: grid;
-grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
-gap: 20px;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 20px;
 }
 
 .place-item {
-border: 1px solid #ddd;
-border-radius: 8px;
-overflow: hidden;
-transition: transform 0.3s ease;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    overflow: hidden;
+    transition: transform 0.3s ease;
 }
 
 .place-item:hover {
-transform: translateY(-5px);
-box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .place-image {
-width: 100%;
-height: 200px;
-object-fit: cover;
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
 }
 
 .place-info {
-padding: 15px;
+    padding: 15px;
 }
 
 .place-info h2 {
-margin-top: 0;
-color: #333;
+    margin-top: 0;
+    color: #333;
 }
 
 .place-info p {
-color: #666;
-font-size: 14px;
-margin-bottom: 10px;
+    color: #666;
+    font-size: 14px;
+    margin-bottom: 10px;
 }
 
 .place-type {
-font-weight: bold;
-color: #007bff;
+    font-weight: bold;
+    color: #007bff;
 }

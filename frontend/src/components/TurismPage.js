@@ -7,13 +7,13 @@ const TourismPage = ({ municipio }) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [searchTerm, setSearchTerm] = useState('');
+  const [filtersVisible, setFiltersVisible] = useState(false); // Estado para controlar la visibilidad del menú de filtros
   const navigate = useNavigate();
 
   useEffect(() => {
     const fetchPlaces = async () => {
       try {
         setLoading(true);
-
         const response = await fetch('https://buscarubicacionespormunicipio-jkomhrg5ba-uc.a.run.app/', {
           method: 'POST',
           body: JSON.stringify({ "municipio": municipio }),
@@ -27,15 +27,12 @@ const TourismPage = ({ municipio }) => {
         }
 
         const contentType = response.headers.get('content-type');
-
         let placesData = [];
 
         if (contentType.includes('application/json')) {
           placesData = await response.json(); // Maneja JSON
         } else if (contentType.includes('multipart/form-data')) {
           const formData = await response.formData(); // Extrae el FormData
-
-          // Extrae el archivo JSON del FormData
           const jsonFile = formData.get('documentos');
 
           if (!jsonFile) {
@@ -47,7 +44,7 @@ const TourismPage = ({ municipio }) => {
 
           const jsonText = await jsonFile.text(); // Lee el archivo como texto
           placesData = JSON.parse(jsonText); // Parsea el JSON
-          
+
           const eventsWithImages = placesData.map(place => {
             const imageFile = formData.get(place.URLImagen);
             if (imageFile) {
@@ -57,35 +54,14 @@ const TourismPage = ({ municipio }) => {
           });
           setPlaces(eventsWithImages);
           setLoading(false);
-
         } else {
           throw new Error('Formato de respuesta no soportado');
         }
-
-        // handleParsedData(placesData);
-
       } catch (err) {
         console.error('Error al cargar los lugares:', err);
         setError("Error al cargar los lugares");
         setLoading(false);
       }
-    };
-
-    const handleParsedData = (placesData) => {
-      if (!Array.isArray(placesData) || placesData.length === 0) {
-        console.error("No se encontraron lugares en el JSON.");
-        setError("No se encontraron lugares en los datos recibidos.");
-        setLoading(false);
-        return;
-      }
-
-      const placesWithImages = placesData.map(place => ({
-        ...place,
-        imageUrl: place.URLImagen || null
-      }));
-
-      setPlaces(placesWithImages);
-      setLoading(false);
     };
 
     fetchPlaces();
@@ -99,24 +75,27 @@ const TourismPage = ({ municipio }) => {
     navigate('/placedetails', { state: { place } });
   };
 
-
   return (
     <div className="tourism-page">
       <h1>Descubre {municipio}</h1>
       <div className="filter-search-container">
         <div className="filter">
-          <h2>Filtros</h2>
-          <div className="filter-options">
-            <label>
-              <input type="checkbox" /> Hoteles
-            </label>
-            <label>
-              <input type="checkbox" /> Restaurantes
-            </label>
-            <label>
-              <input type="checkbox" /> Atracciones
-            </label>
-          </div>
+          <h2 onClick={() => setFiltersVisible(!filtersVisible)} style={{ cursor: 'pointer' }}>
+            Filtrar {filtersVisible ? '▲' : '▼'}
+          </h2>
+          {filtersVisible && (
+            <div className="filter-options">
+              <label>
+                <input type="checkbox" /> Hoteles
+              </label>
+              <label>
+                <input type="checkbox" /> Restaurantes
+              </label>
+              <label>
+                <input type="checkbox" /> Atracciones
+              </label>
+            </div>
+          )}
         </div>
         <div className="search">
           <input 

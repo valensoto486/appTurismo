@@ -19,14 +19,14 @@
 }
 
 .place-image-large {
-    width: 50vw; /* Ocupa el 50% del ancho de la ventana */
+    width: 50vw; 
     height: auto;
     margin-right: 20px;
     border-radius: 8px;
     }
 
 .place-info {
-    max-width: 50vw; /* También ocupa el 50% del ancho de la ventana */
+    max-width: 50vw; 
 }
 
 .place-title {
@@ -56,8 +56,18 @@
     margin-top: 20px;
 }
 
+.rating-section .h2 {
+    padding-top: 6rem;
+    font-size: 2rem;
+    padding: 2rem;
+}
+
 .rating-option {
     margin-bottom: 1rem;
+}
+
+.rating-option .p1{
+    font-size: 1.2rem;
 }
 
 .star-rating {
@@ -66,7 +76,7 @@
 }
 
 .star {
-    font-size: 24px;
+    font-size: 26px;
     color: rgb(186, 186, 186);
     padding-right: 4px;
 }
@@ -84,12 +94,12 @@
     border-radius: 4px;
 }
 
-button {
+.rating-section button {
     padding: 10px 20px;
     margin-top: 10px;
     background-color: rgb(2, 113, 2);
     color: white;
-    border: none;
+    border: 4px;
     cursor: pointer;
 }
-  
+ 

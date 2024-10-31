@@ -96,6 +96,8 @@ const Home = () => {
           {!isAuthenticated && (
             <Link className="btn" to="/login">Iniciar Sesión</Link>
           )}
+          <h1 className='h'> ENTRE TODOS CUIDAMOS EL MEDIO AMBIENTE</h1>
+          <p className='p1'>#PorUnTurismoSostenible</p>
         </div>
       </section>
 
@@ -110,7 +112,7 @@ const Home = () => {
 
       <section className="discover">
         <div className="container">
-          <h2>Descubre el Oriente</h2>
+          <h2 className='descubre'>Descubre el Oriente</h2>
           <div className="discover-grid">
             {Object.keys(cityImages).map((city) => (
               <div key={city} className="discover-item">

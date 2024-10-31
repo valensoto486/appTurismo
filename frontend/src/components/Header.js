@@ -8,38 +8,35 @@ const Header = () => {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const navigate = useNavigate();
 
-  // Función para verificar el estado de autenticación al cargar el componente
   const checkAuth = () => {
     const token = localStorage.getItem('authToken');
     setIsAuthenticated(!!token);
   };
 
-  // useEffect para comprobar la autenticación al montar el componente
   useEffect(() => {
-    checkAuth(); // Verificar autenticación al iniciar
+    checkAuth();
   }, []);
 
-  // useEffect para actualizar la autenticación en tiempo real
   useEffect(() => {
     const handleStorageChange = () => {
-      checkAuth(); // Comprobar autenticación si hay un cambio en localStorage
+      checkAuth();
     };
 
-    window.addEventListener('storage', handleStorageChange); // Escuchar cambios en el almacenamiento
+    window.addEventListener('storage', handleStorageChange);
 
     return () => {
-      window.removeEventListener('storage', handleStorageChange); // Limpiar el evento al desmontar
+      window.removeEventListener('storage', handleStorageChange);
     };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    checkAuth(); // Actualiza el estado de autenticación
-    navigate('/'); 
+    checkAuth();
+    navigate('/');
   };
 
-  const handleLanguageChange = (language) => {
-    // Cargar el script de Google Translate si no se ha cargado
+  // Inicializa Google Translate cuando el script se carga
+  useEffect(() => {
     if (!document.getElementById('google_translate_script')) {
       const googleTranslateScript = document.createElement('script');
       googleTranslateScript.src = `https://translate.google.com/translate_a/element.js?cb=googleTranslateElementInit`;
@@ -47,18 +44,22 @@ const Header = () => {
       document.body.appendChild(googleTranslateScript);
     }
 
-    // Cambiar el idioma una vez que el script esté cargado
-    const interval = setInterval(() => {
-      const translateElement = document.getElementById('google_translate_element');
-      if (translateElement) {
-        const selectElement = translateElement.getElementsByTagName('select')[0];
-        selectElement.value = language;
-        selectElement.dispatchEvent(new Event('change'));
-        clearInterval(interval); // Limpiar el intervalo
-      }
-    }, 100); // Verificar cada 100ms
-  };
+    window.googleTranslateElementInit = () => {
+      new window.google.translate.TranslateElement(
+        { pageLanguage: 'es', includedLanguages: 'es,en,fr' },
+        'google_translate_element'
+      );
+    };
+  }, []);
 
+  const handleLanguageChange = (language) => {
+    const translateElement = document.getElementById('google_translate_element');
+    if (translateElement) {
+      const selectElement = translateElement.getElementsByTagName('select')[0];
+      selectElement.value = language;
+      selectElement.dispatchEvent(new Event('change'));
+    }
+  };
 
   return (
     <header className="header">
@@ -94,7 +95,6 @@ const Header = () => {
             </li>
           </ul>
 
-          {/* Botón de cerrar sesión que aparece solo cuando el usuario ha iniciado sesión */}
           {isAuthenticated && (
             <div className="user-menu">
               <button className="logout-button" onClick={handleLogout}>
@@ -103,9 +103,12 @@ const Header = () => {
             </div>
           )}
         </nav>
+        {/* Div para Google Translate */}
+        <div id="google_translate_element" style={{ display: 'none' }}></div>
       </div>
     </header>
   );
 };
 
 export default Header;
+

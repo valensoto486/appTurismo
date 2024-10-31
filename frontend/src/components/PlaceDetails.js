@@ -78,24 +78,24 @@ const PlaceDetails = () => {
 
       {/* Sistema de calificación con estrellas */}
       <div className="rating-section">
-        <h2>Califica este lugar</h2>
+        <h2 className='h2'>Califica este lugar</h2>
         <div className="rating-option">
-          <p>Gestión de Residuos</p>
+          <p className='p1'>Gestión de Residuos</p>
           <StarRating rating={ratings.gestionResiduos} onRate={(stars) => handleRate('gestionResiduos', stars)} />
         </div>
 
         <div className="rating-option">
-          <p>Cultura Local</p>
+          <p className='p1'>Cultura Local</p>
           <StarRating rating={ratings.culturaLocal} onRate={(stars) => handleRate('culturaLocal', stars)} />
         </div>
 
         <div className="rating-option">
-          <p>Movilidad Sostenible</p>
+          <p className='p1'>Movilidad Sostenible</p>
           <StarRating rating={ratings.movilidadSostenible} onRate={(stars) => handleRate('movilidadSostenible', stars)} />
         </div>
 
         <div className="rating-option">
-          <p>Protección de Biodiversidad</p>
+          <p className='p1'>Protección de Biodiversidad</p>
           <StarRating rating={ratings.proteccionBiodiversidad} onRate={(stars) => handleRate('proteccionBiodiversidad', stars)} />
         </div>
 
