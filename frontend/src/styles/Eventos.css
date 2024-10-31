@@ -5,7 +5,7 @@
 }
   
 .eventos-header {
-    background-color: rgba(1, 70, 1, 0.589);
+    background-color: rgba(1, 70, 1, 0.394);
     color: white;
     padding: 1.3rem 0;
 }
@@ -99,6 +99,17 @@
 .btn-ver-mas:hover {
     background-color: #2f855a;
 }
+
+.error-message {
+    background-color: #e53e3e;
+    color: white;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    text-align: center;
+    font-weight: bold;
+    margin-bottom: 1rem;
+}
+  
   
 @media (max-width: 768px) {
     .eventos-lista {

@@ -105,7 +105,7 @@ const Home = () => {
         <div className="container">
           <div className="about-content">
             <h2>¿Qué es el Turismo Sostenible?</h2>
-            <p>El turismo sostenible es una forma de viajar que respeta el medio ambiente, la cultura local y contribuye al desarrollo económico de las comunidades. Al practicar el turismo sostenible, ayudamos a preservar los destinos para las generaciones futuras.</p>
+            <p>El turismo sostenible transforma cada viaje en una experiencia única que respeta la naturaleza y empodera a las comunidades locales. Al elegir explorar de manera consciente, no solo disfrutamos de paisajes impresionantes y culturas vibrantes, sino que también contribuimos a la conservación del medio ambiente y al bienestar económico de los lugares que visitamos. ¡Viaja con propósito y deja una huella positiva en el mundo!</p>
           </div>
         </div>
       </section>

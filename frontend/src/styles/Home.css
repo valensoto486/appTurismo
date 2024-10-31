@@ -35,16 +35,16 @@
 }
 
 .container .h {
-  font-family: "Bebas Neue", serif; /* Aplicar la fuente Bebas Neue */
-  font-weight: 550; /* Peso de la fuente */
-  font-style: normal; /* Estilo de la fuente */
-  width: 50rem; /* Ancho del h1 */
-  color: white; /* Color del texto */
+  font-family: "Bebas Neue", serif; /* fuente Bebas Neue */
+  font-weight: 580; 
+  font-style: normal; 
+  width: 60rem; 
+  color: white; 
   
   /* Alineación y márgenes */
-  text-align: left; /* Alinear el texto a la izquierda */
-  margin: 3rem 0 0 2.5rem; /* Aumentar el margen superior para mover el h1 más abajo */
-  font-size: 6.87rem;
+  text-align: left; 
+  margin: 2.5rem 0 0 0; 
+  font-size: 7.5rem;
   line-height: 1;
 }
 
@@ -59,9 +59,9 @@
   /* Alineación y márgenes */
   text-align: left; 
   font-size: 1.8rem;
-  margin-left: 4.3rem;
+  margin-left: 2.5rem;
   line-height: 1;
-  margin-top: 1.6rem;
+  margin-top: 0.9rem;
 }
 
 .about {
@@ -70,18 +70,20 @@
 }
 
 .about-content {
-  background-color: rgba(1, 70, 1, 0.418);
+  background-color: rgba(1, 97, 1, 0.418);
   padding: 30px;
   border-radius: 10px;
   font-size: 1.4rem; 
 }
 .about-content p {
+  padding-top: 25px;
   font-size: 1.2rem; 
   line-height: 1.6; 
 }
 
 .about-content h2 {
   font-size: 2rem;
+  font-weight: 600;
 }
 
 .discover {
@@ -115,9 +117,10 @@
   padding: 50px 0;
 }
 
-.events h2{
-  font-size: 2rem;
-  color: rgb(223, 240, 223);
+.events h2{ 
+  font-size: 2.5rem;
+  color: rgb(255, 255, 255);
+  font-weight: 500;
 }
 .events-grid {
   display: grid;
