@@ -1,7 +1,12 @@
-@tailwind base; 
-@tailwind components;
-@tailwind utilities;
+/* Ajustes de colores */
+:root {
+  --primary-green: rgb(1, 70, 1);
+  --white: #ffffff;
+  --dark-green: #004400;
+  --light-green: #c2f0c2;
+}
 
+/* Estilos generales */
 .header {
   background-color: rgb(1, 70, 1);
   color: var(--white);
@@ -42,7 +47,7 @@
   display: none;
   position: absolute;
   background-color: var(--white);
-  box-shadow: 0 8px 16px rgba(0,0,0,0.2);
+  box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
   z-index: 1;
 }
 
@@ -72,6 +77,7 @@
   background-color: var(--light-green);
 }
 
+/* Botón de alternancia de navegación en pantallas pequeñas */
 .nav-toggle {
   display: none;
 }
@@ -94,6 +100,8 @@
     left: 0;
     right: 0;
     background-color: var(--primary-green);
+    padding: 1rem 0;
+    border-top: 1px solid var(--light-green);
   }
 
   .nav-menu.active {
@@ -101,7 +109,7 @@
   }
 
   .nav-menu li {
-    margin: 0;
+    margin: 0.5rem 0;
     text-align: center;
   }
 
@@ -120,25 +128,24 @@
   background: none;
   border: none;
   cursor: pointer;
-  font-size: 1.5rem; /* Ajusta el tamaño del ícono */
+  font-size: 1.5rem;
 }
 
 .dropdown-menu {
   position: absolute;
-  top: 100%; /* Asegúrate de que el menú aparezca justo debajo del ícono */
-  right: 0; /* Alinea a la derecha */
-  background: white; /* O el color que prefieras */
-  border: 1px solid #ccc; /* Borde para el menú */
-  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15); /* Sombra para el menú */
-  z-index: 1000; /* Asegúrate de que esté encima de otros elementos */
+  top: 100%;
+  right: 0;
+  background: white;
+  border: 1px solid #ccc;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+  z-index: 1000;
 }
 
 .dropdown-item {
-  padding: 10px 20px; /* Espaciado para los elementos del menú */
+  padding: 10px 20px;
   cursor: pointer;
 }
 
 .dropdown-item:hover {
-  background-color: #f0f0f0; /* Cambiar color de fondo al pasar el mouse */
+  background-color: #f0f0f0;
 }
-

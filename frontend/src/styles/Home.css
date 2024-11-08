@@ -156,10 +156,40 @@
     height: 45vh;
   }
 
+  .container .h {
+    font-family: "Bebas Neue", serif; /* fuente Bebas Neue */
+    font-weight: 580; 
+    font-style: normal; 
+    width: 30rem; 
+    color: white; 
+    
+    /* Alineación y márgenes */
+    text-align: left; 
+    margin: 0rem 0 0 0; 
+    font-size: 4rem;
+    line-height: 1;
+  }
+  
+  .container .p1 {
+    font-family: "Cabin", sans-serif; /* Fuente Cabin */
+    font-optical-sizing: auto; 
+    font-weight: 999; 
+    font-style: normal; 
+    font-variation-settings: "wdth" 100;
+    color: white; 
+    
+    /* Alineación y márgenes */
+    text-align: left; 
+    font-size: 1rem;
+    margin-left: 1.6rem;
+    line-height: 1;
+    margin-top: 0.3rem;
+  }
+
   .btn {
     position: absolute;
-    left: 65px;
-    top: 350px;
+    left: 30px;
+    top: 340px;
   }
 
   .discover-grid, .events-grid {
