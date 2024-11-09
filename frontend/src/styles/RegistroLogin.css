@@ -79,11 +79,12 @@ button[type="submit"]:hover {
   margin-right: 8px; 
 }
 .alineado input[type="checkbox"] {
-  width: 30px; 
-  height: 30px; 
+  width: 15px; 
+  height: 15px; 
   transform: scale(2); 
   margin: 0 8px; 
   cursor: pointer; 
+  padding: 20px;
 }
 
 

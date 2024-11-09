@@ -34,7 +34,7 @@ function App() {
           <Route path="/laceja" element={<LaCeja />} />
           <Route path="/elretiro" element={<ElRetiro />} />
           <Route path="/elcarmen" element={<ElCarmen />} />
-          <Route path="/dashboardAdmin" element={<Dashboard />} />
+          <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/placedetails" element={<PlaceDetails />} />
         </Routes>
         <Footer />

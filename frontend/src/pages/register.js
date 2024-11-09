@@ -1,14 +1,14 @@
 import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/RegistroLogin.css';
 
 function Register() {
   const [username, setUsername] = useState('');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
-  const [isHost, setIsHost] = useState(false); // Estado para el checkbox
+  const [isHost, setIsHost] = useState(false);
   const [mensaje, setMensaje] = useState('');
-  const [setCargando] = useState(false);
+  const [cargando, setCargando] = useState(false);  // Cambié esto
   const navigate = useNavigate();
 
   const handleSubmit = async (event) => {
@@ -19,7 +19,7 @@ function Register() {
       nombre: username,
       correo: email,
       contrasenia: password,
-      rol: isHost ? 'anfitrion' : 'turista', // Asigna el rol según el checkbox
+      rol: isHost ? 'anfitrion' : 'turista',
     };
 
     try {
@@ -38,17 +38,15 @@ function Register() {
           const jsonResponse = JSON.parse(data);
           setMensaje(`Registro exitoso! Bienvenido, ${jsonResponse.nombre || username}`);
           
-          // Guarda el token en localStorage
-          localStorage.setItem('authToken', 'tokenDeEjemplo'); 
+          localStorage.setItem('authToken', 'tokenDeEjemplo');
 
-          navigate('/'); // Redirige a Home
+          navigate('/');
         } catch (jsonError) {
           setMensaje(`Registro exitoso! Bienvenido, ${username}`);
           
-          // Guarda el token en localStorage
           localStorage.setItem('authToken', 'tokenDeEjemplo');
 
-          navigate('/'); // Redirige a Home
+          navigate('/');
         }
       } else {
         setMensaje(`Error: ${data}`);
@@ -96,7 +94,7 @@ function Register() {
             required
           />
         </div>
-        <div className="grupo-formulario">
+        <div className="grupo-formulario alineado">
           <label htmlFor="isHost">¿Desea promocionar un lugar?</label>
           <input
             id="isHost"
@@ -107,8 +105,10 @@ function Register() {
         </div>
         <button type="submit">Registrarse</button>
       </form>
+      {cargando && <p>Cargando...</p>}  {/* Opcional: Mensaje de carga */}
     </div>
   );
 }
 
 export default Register;
+
