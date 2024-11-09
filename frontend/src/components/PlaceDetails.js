@@ -1,5 +1,5 @@
-import '../styles/PlaceDetails.css';
-import React, { useState } from 'react';
+import '../styles/PlaceDetails.css'; 
+import React, { useState, useEffect } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 
 const StarRating = ({ rating, onRate }) => {
@@ -30,6 +30,24 @@ const PlaceDetails = () => {
     proteccionBiodiversidad: 0,
   });
   const [comment, setComment] = useState('');
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
+  const [userRole, setUserRole] = useState(null);
+  const [userName, setUserName] = useState('Anónimo');  // Nombre por defecto como "Anónimo", esto para los usuarios que no iniciaron sesion 
+
+  useEffect(() => {
+    const fetchUserInfo = async () => {
+      //Obtenemos la info del usuario autenticado
+      const response = await fetch('https://autenticarusuario-jkomhrg5ba-uc.a.run.app'); // Este endpoint debe obtener la info del usuario
+      const data = await response.json();
+      setIsAuthenticated(data.isAuthenticated);
+      setUserRole(data.role);
+      if (data.isAuthenticated) {
+        setUserName(data.userName); // Si está autenticado, asigna su nombre
+      }
+    };
+
+    fetchUserInfo();
+  }, []);
 
   const handleRate = (option, stars) => {
     setRatings(prevRatings => ({ ...prevRatings, [option]: stars }));
@@ -39,10 +57,45 @@ const PlaceDetails = () => {
     return `https://www.google.com/maps/search/?api=1&query=${lat},${lng}`;
   };
 
-  const handleSubmit = () => {
-    console.log('Calificaciones:', ratings);
-    console.log('Comentario:', comment);
-    alert('¡Gracias por tu retroalimentación!');
+  const handleSubmit = async () => {
+    const comentarioData = {
+      uuid_ubicacion: place.uuid,
+      contenido: comment,
+      autor: userName, // Si no está autenticado, será "Anónimo"
+      calificacion: Math.round(
+        (ratings.gestionResiduos + ratings.culturaLocal + ratings.movilidadSostenible + ratings.proteccionBiodiversidad) / 4
+      ),
+      gestion_residuos: ratings.gestionResiduos,
+      cuidado_ambiente: ratings.culturaLocal,
+      movilidad_sostenible: ratings.movilidadSostenible,
+      cultura_local: ratings.proteccionBiodiversidad,
+    };
+
+    try {
+      const response = await fetch('https://crearcomentario-jkomhrg5ba-uc.a.run.app', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(comentarioData),
+      });
+
+      if (response.ok) {
+        alert('Comentario creado correctamente');
+        setComment('');
+        setRatings({
+          gestionResiduos: 0,
+          culturaLocal: 0,
+          movilidadSostenible: 0,
+          proteccionBiodiversidad: 0,
+        });
+      } else {
+        alert('Error al crear el comentario');
+      }
+    } catch (error) {
+      alert('Ocurrió un error al enviar el comentario');
+      console.error(error);
+    }
   };
 
   if (!place) {
@@ -76,7 +129,6 @@ const PlaceDetails = () => {
         </div>
       </div>
 
-      {/* Sistema de calificación con estrellas */}
       <div className="rating-section">
         <h2 className='h2'>Califica este lugar</h2>
         <div className="rating-option">
@@ -109,9 +161,13 @@ const PlaceDetails = () => {
 
         <button onClick={handleSubmit}>Enviar</button>
       </div>
+
+      {/* Mensaje si no está autenticado */}
+      {!isAuthenticated && (
+        <p>Si deseas dejar un comentario, puedes hacerlo de forma anónima.</p>
+      )}
     </div>
   );
 };
 
 export default PlaceDetails;
-

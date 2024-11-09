@@ -68,8 +68,25 @@ button[type="submit"]:hover {
 
 
 .registro:hover {
-  color: #1B5E20; /* Cambia el color a un verde más profundo en hover */
+  color: #1B5E20; 
 }
+.alineado {
+  display: flex;
+  align-items: center;
+}
+
+.alineado label {
+  margin-right: 8px; 
+}
+.alineado input[type="checkbox"] {
+  width: 30px; 
+  height: 30px; 
+  transform: scale(2); 
+  margin: 0 8px; 
+  cursor: pointer; 
+}
+
+
 
 /* Ajuste responsivo */
 @media (max-width: 600px) {
