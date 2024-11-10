@@ -1,30 +1,37 @@
-.dashboard {
+/* Asegurarse de que html y body ocupen toda la pantalla */
+html, body {
+    height: 100%;
+    margin: 0;
+  }
+  
+  .dashboard {
     font-family: Arial, sans-serif;
-    max-width: 1200px;
-    margin: 0 auto;
+    width: 100%; /* Permite que el fondo ocupe todo el ancho */
+    min-height: 100vh; /* Asegura que el fondo ocupe toda la altura */
+    margin: 0;
     padding: 20px;
-    background-color: #f0fff4;
-}
-
-h1 {
+    background-color: #f0fff4; /* Fondo que cubre toda la pantalla */
+  }
+  
+  h1 {
     color: #1b5e20;
     text-align: center;
     margin-bottom: 30px;
     font-size: 1.7rem;
-}
-
-h2 {
+  }
+  
+  h2 {
     color: #2e7d32;
     margin-bottom: 15px;
-}
-
-.tabs {
+  }
+  
+  .tabs {
     display: flex;
     justify-content: center;
     margin-bottom: 20px;
-}
-
-.tab {
+  }
+  
+  .tab {
     background-color: #4caf50;
     border: none;
     color: white;
@@ -36,92 +43,92 @@ h2 {
     margin: 4px 2px;
     cursor: pointer;
     border-radius: 5px;
-}
-
-.tab.active {
+  }
+  
+  .tab.active {
     background-color: #1b5e20;
-}
-
-.tab-content {
+  }
+  
+  .tab-content {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
     box-shadow: 0 2px 4px rgba(0,0,0,0.1);
-}
-
-.form {
+  }
+  
+  .form {
     display: flex;
     flex-direction: column;
     gap: 10px;
     margin-bottom: 20px;
-}
-
-input[type="text"],
-input[type="file"],
-textarea {
+  }
+  
+  input[type="text"],
+  input[type="file"],
+  textarea {
     width: 100%;
     padding: 10px;
     border: 1px solid #4caf50;
     border-radius: 4px;
-}
-
-textarea {
+  }
+  
+  textarea {
     height: 100px;
-}
-
-.date-button,
-.submit-button,
-.edit-button,
-.delete-button {
+  }
+  
+  .date-button,
+  .submit-button,
+  .edit-button,
+  .delete-button {
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
-}
-
-.date-button {
+  }
+  
+  .date-button {
     background-color: #81c784;
     color: white;
-}
-
-.submit-button {
+  }
+  
+  .submit-button {
     background-color: #4caf50;
     color: white;
-}
-
-.edit-button {
+  }
+  
+  .edit-button {
     background-color: #ffa000;
     color: white;
-}
-
-.delete-button {
+  }
+  
+  .delete-button {
     background-color: #f44336;
     color: white;
-}
-
-table {
+  }
+  
+  table {
     width: 100%;
     border-collapse: collapse;
     margin-top: 20px;
-}
-
-th, td {
+  }
+  
+  th, td {
     border: 1px solid #ddd;
     padding: 12px;
     text-align: left;
-}
-
-th {
+  }
+  
+  th {
     background-color: #4caf50;
     color: white;
-}
-
-tr:nth-child(even) {
+  }
+  
+  tr:nth-child(even) {
     background-color: #f2f2f2;
-}
-
-.dialog-overlay {
+  }
+  
+  .dialog-overlay {
     position: fixed;
     top: 0;
     left: 0;
@@ -131,43 +138,66 @@ tr:nth-child(even) {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-.dialog {
+  }
+  
+  .dialog {
     background-color: white;
     padding: 20px;
     border-radius: 5px;
     max-width: 400px;
-}
-
-.dialog h2 {
+  }
+  
+  .dialog h2 {
     color: #2e7d32;
     margin-bottom: 10px;
-}
-
-.dialog-buttons {
+  }
+  
+  .dialog-buttons {
     display: flex;
     justify-content: flex-end;
     margin-top: 20px;
-}
-
-.cancel-button,
-.confirm-button {
+  }
+  
+  .cancel-button,
+  .confirm-button {
     padding: 10px 15px;
     border: none;
     border-radius: 4px;
     cursor: pointer;
     font-weight: bold;
     margin-left: 10px;
-}
-
-.cancel-button {
+  }
+  
+  .cancel-button {
     background-color: #9e9e9e;
     color: white;
-}
-
-.confirm-button {
+  }
+  
+  .confirm-button {
     background-color: #4caf50;
     color: white;
-}
+  }
+  
+  .event-item {
+    display: flex;
+    flex-direction: column;
+    padding: 10px;
+    border: 1px solid #ccc;
+    margin-bottom: 10px;
+  }
+  
+  .event-details {
+    margin-bottom: 10px;
+  }
+  
+  .event-image {
+    max-width: 200px;
+    height: auto;
+    margin-top: 10px;
+  }
+  
+  .event-actions button {
+    margin-top: 10px;
+    margin-right: 5px;
+  }
   

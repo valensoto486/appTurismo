@@ -6,14 +6,14 @@ import Logo from '../styles/images/Logo.png';
 const Header = () => {
   const [isOpen, setIsOpen] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
-  const [userRole, setUserRole] = useState(null); // Estado para almacenar el rol
+  const [rol, setUserRole] = useState(null); // Estado para almacenar el rol
   const navigate = useNavigate();
 
   const checkAuth = () => {
     const token = localStorage.getItem('authToken');
-    const role = localStorage.getItem('userRole'); // Obtén el rol del usuario
+    const rol = localStorage.getItem('rol'); // Obtén el rol del usuario
     setIsAuthenticated(!!token);
-    setUserRole(role); // Guarda el rol
+    setUserRole(rol); // Guarda el rol
   };
 
   useEffect(() => {
@@ -34,7 +34,7 @@ const Header = () => {
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('userRole'); // También eliminar el rol al hacer logout
+    localStorage.removeItem('rol'); // También eliminar el rol al hacer logout
     checkAuth();
     navigate('/');
   };
@@ -99,7 +99,7 @@ const Header = () => {
             </li>
           </ul>
 
-          {isAuthenticated && userRole === 'admin' && (
+          {isAuthenticated && rol === 'admin' && (
             <div className="admin-menu">
               <Link to="/dashboard" className="dashboard-button">
                 Dashboard

@@ -44,7 +44,8 @@ function Login() {
       // Verifica si la respuesta indica éxito
       if (response.ok) {
         localStorage.setItem('authToken', data.Token); // Guardar el token
-        localStorage.setItem('userRole', data.role); // Guarda el rol
+        localStorage.setItem('rol', data.rol); // Guarda el rol
+        console.log(data); 
         alert(`Inicio de sesión exitoso!`);
         navigate('/'); // Redirigir a la página de inicio
       } else {
