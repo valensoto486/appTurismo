@@ -16,6 +16,7 @@ import ElRetiro from './pages/ElRetiro.js';
 import ElCarmen from './pages/ElCarmen.js';
 import Dashboard from './pages/DashboardAdmin.js';
 import PlaceDetails from './components/PlaceDetails.js';
+import AddPlace from './components/AddPlace.js';
 
 function App() {
   return (
@@ -36,6 +37,7 @@ function App() {
           <Route path="/elcarmen" element={<ElCarmen />} />
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/placedetails" element={<PlaceDetails />} />
+          <Route path="/add-place" element={<AddPlace />} />
         </Routes>
         <Footer />
       </div>

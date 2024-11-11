@@ -1,26 +1,30 @@
 import React, { useState, useEffect } from 'react';
 import { format } from 'date-fns';
 import '../styles/DashboardAdmin.css';
+import { jwtDecode } from 'jwt-decode';
 
 export default function Dashboard() {
   const [activeTab, setActiveTab] = useState('events');
   const [events, setEventos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
-  const [content, setContent] = useState([]);
-  const [comments, setComments] = useState([]);
+  const [places, setPlaces] = useState([]);
   const [selectedItem, setSelectedItem] = useState(null);
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [dialogAction, setDialogAction] = useState('');
   const [selectedFile, setSelectedFile] = useState(null);
   const [fechaInicio, setFechaInicio] = useState('');
   const [fechaFinal, setFechaFinal] = useState('');
+  const [newPlace, setNewPlace] = useState({
+    nombre: '',
+    descripcion: '',
+    municipio: ''
+  });
 
   useEffect(() => {
     // Obtener eventos, contenido y comentarios al cargar el componente
     fetchEvents();
-    fetchContent();
-    fetchComments();
+    fetchPlaces();
   }, []);
 
   const fetchEvents = async () => {
@@ -50,25 +54,65 @@ export default function Dashboard() {
     }
   };
 
-  const fetchContent = async () => {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch("https://buscarcontenidomultimedia-jkomhrg5ba-uc.a.run.app", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const result = await response.json();
-    setContent(result);
+  const fetchPlaces = async () => {
+    try {
+      setLoading(true);
+  
+      // Lista de municipios
+      const municipios = ['Rionegro', 'La Ceja', 'La Unión', 'El Carmen', 'El Retiro'];
+  
+      // Creamos un arreglo para almacenar los lugares de todos los municipios
+      let allPlacesData = [];
+  
+      for (const municipio of municipios) {
+        const response = await fetch('https://buscarubicacionespormunicipio-jkomhrg5ba-uc.a.run.app/', {
+          method: 'POST',
+          body: JSON.stringify({ municipio }),
+          headers: { 'Content-Type': 'application/json' },
+        });
+  
+        if (!response.ok) throw new Error(`Error al cargar lugares de ${municipio}`);
+  
+        const contentType = response.headers.get('content-type');
+        let placesData = [];
+  
+        if (contentType.includes('application/json')) {
+          placesData = await response.json();
+        } else if (contentType.includes('multipart/form-data')) {
+          const formData = await response.formData();
+          const jsonFile = formData.get('documentos');
+  
+          if (!jsonFile) {
+            setError(`No se encontraron datos de lugares para ${municipio}`);
+            return;
+          }
+  
+          const jsonText = await jsonFile.text();
+          placesData = JSON.parse(jsonText);
+          placesData = placesData.map(place => {
+            const imageFile = formData.get(place.URLImagen);
+            if (imageFile) place.imageUrl = URL.createObjectURL(imageFile);
+            return place;
+          });
+        } else {
+          throw new Error(`Formato de respuesta no soportado para ${municipio}`);
+        }
+  
+        // Agregar los lugares de este municipio al arreglo general
+        allPlacesData = [...allPlacesData, ...placesData];
+      }
+  
+      // Setear los lugares de todos los municipios
+      setPlaces(allPlacesData);
+    } catch (err) {
+      console.error('Error al cargar los lugares:', err);
+      setError("Error al cargar los lugares");
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const fetchComments = async () => {
-    const token = localStorage.getItem("authToken");
-    const response = await fetch("https://buscarcomentarios-jkomhrg5ba-uc.a.run.app", {
-      method: "GET",
-      headers: { Authorization: `Bearer ${token}` },
-    });
-    const result = await response.json();
-    setComments(result);
-  };
+  
 
   const handleCreateEvent = async (e) => {
     e.preventDefault();
@@ -160,11 +204,14 @@ export default function Dashboard() {
 
   const handleDeleteEvent = async (uuid) => {
     const token = localStorage.getItem("authToken");
+    const decodedToken = jwtDecode(token);
+    console.log('Decoded Token:', decodedToken)
     try {
+      
       const response = await fetch("https://eliminarevento-jkomhrg5ba-uc.a.run.app", {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer ${token}`,
+          Authorization: `Bearer `+token,
           "Content-Type": "application/json",
         },
         body: JSON.stringify({ uuid }),
@@ -174,15 +221,53 @@ export default function Dashboard() {
         alert("Evento eliminado correctamente");
         fetchEvents(); // Actualizar la lista de eventos
       } else {
-        alert("Error al eliminar evento: " + result);
+        const errorText = await response.text(); // Leer respuesta como texto en caso de error
+        console.error("Error:", errorText);
+        alert(errorText); // Mostrar el mensaje de error
+        return;
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
 
-  const handleDeleteContent = async (id) => {
+  const handleCreatePlace = async (e) => {
+    e.preventDefault();
     const token = localStorage.getItem("authToken");
+
+    // Crear un FormData para enviar tanto los metadatos como el archivo
+    const formData = new FormData();
+    formData.append("metadata", JSON.stringify(newPlace)); // Adjuntar el JSON con los metadatos
+    formData.append("file", selectedFile); // Asegúrate de que selectedFile es el archivo que el usuario ha seleccionado
+
+    try {
+      const response = await fetch('https://crearubicacion-jkomhrg5ba-uc.a.run.app', {
+        method: 'POST',
+        headers: {
+          "Authorization": `Bearer ${token}`,
+        },
+        body: formData, // Enviar FormData
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        alert('Lugar creado con éxito');
+        setNewPlace({ nombre: '', descripcion: '', municipio: '' }); // Limpiar el formulario
+        fetchPlaces(); // Recargar la lista de lugares
+      } else {
+        alert('Error al crear lugar: ' + data.message);
+      }
+    } catch (error) {
+      console.error('Error al crear el lugar:', error);
+    }
+  };
+
+  
+  const handleDeleteContent = async (uuid_lugar, uuid_recurso) => {
+    console.log(uuid_lugar, uuid_recurso);
+    const token = localStorage.getItem("authToken");
+
     try {
       const response = await fetch("https://eliminarcontenido-jkomhrg5ba-uc.a.run.app", {
         method: "DELETE",
@@ -190,50 +275,27 @@ export default function Dashboard() {
           Authorization: `Bearer ${token}`,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ id }),
+        body: JSON.stringify({
+          uuid_lugar: uuid_lugar,
+          uuid_recurso: uuid_recurso
+        })
       });
+      const data = await response.json();
       if (response.ok) {
         alert("Contenido eliminado correctamente");
-        fetchContent(); // Actualizar la lista de contenido
+        fetchPlaces(); // Actualizar la lista de contenido
       } else {
-        alert("Error al eliminar contenido");
+        alert("Error al eliminar contenido", data);
       }
     } catch (error) {
       console.error("Error:", error);
     }
   };
-
-  const handleDeleteComment = async (uuid_comentario, uuid_ubicacion) => {
-    const token = localStorage.getItem("authToken");  // Obtener el token de localStorage
-    try {
-      const response = await fetch("https://your-cloud-function-url", {
-        method: "DELETE",
-        headers: {
-          "Authorization": `Bearer ${token}`,  // Se pasa el token en el header
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          uuid_comentario,
-          uuid_ubicacion,
-        }),
-      });
-  
-      if (response.ok) {
-        alert("Comentario borrado correctamente");
-        fetchComments(); // Actualizar la lista de comentarios después de eliminar uno
-      } else {
-        const result = await response.text();
-        alert("Error al borrar comentario: " + result);
-      }
-    } catch (error) {
-      console.error("Error:", error);
-      alert("Ocurrió un error al eliminar el comentario");
-    }
-  };
   
 
-  const confirmAction = (action, item) => {
-    setSelectedItem(item);
+  const confirmAction = (action, place) => {
+    console.log("Item recibido en confirmAction:", place);
+    setSelectedItem(place);
     setDialogAction(action);
     setIsDialogOpen(true);
   };
@@ -241,12 +303,11 @@ export default function Dashboard() {
   const executeAction = () => {
     switch (dialogAction) {
       case 'deleteEvent':
-        handleDeleteEvent(selectedItem.id);
+        handleDeleteEvent(selectedItem.uuid);
         break;
       case 'deleteContent':
-        handleDeleteContent(selectedItem.id);
+        handleDeleteContent(selectedItem.uuid_lugar, selectedItem.uuid_recurso);
         break;
-      // Add cases for other actions if needed
     }
     setIsDialogOpen(false);
   };
@@ -266,12 +327,6 @@ export default function Dashboard() {
           onClick={() => setActiveTab('content')}
         >
           Contenido
-        </button>
-        <button
-          className={`tab ${activeTab === 'comments' ? 'active' : ''}`}
-          onClick={() => setActiveTab('comments')}
-        >
-          Comentarios
         </button>
       </div>
 
@@ -312,70 +367,128 @@ export default function Dashboard() {
                 required
               />
               <input type="file" accept="image/*" onChange={(e) => setSelectedFile(e.target.files[0])} />
-              <button type="submit">{selectedItem ? 'Modificar Evento' : 'Crear Evento'}</button>
+              <button type="submit">{'Crear'}</button>
             </form>
 
             <h2>Lista de Eventos</h2>
-            <ul>
-              {events.map((event) => (
-                <li key={event.id} className="event-item">
-                  <div className="event-details">
-                    <h4>{event.title}</h4>
-                    <p>{event.description}</p>
-                    <p><strong>Fecha de Inicio:</strong> {event.fecha_inicio && !isNaN(new Date(event.fecha_inicio)) ? format(new Date(event.fecha_inicio), 'dd/MM/yyyy') : 'Fecha no válida'}</p>
-                    <p><strong>Fecha Final:</strong> {event.fecha_final && !isNaN(new Date(event.fecha_final)) ? format(new Date(event.fecha_final), 'dd/MM/yyyy') : 'Fecha no válida'}</p>
-                  </div>
-                  
-                  {/* Mostrar la imagen si existe */}
-                  {event.imageUrl && <img src={event.imageUrl} alt={event.title} className="event-image" />}
-                  
-                  {/* Botones de modificar y eliminar */}
-                  <div className="event-actions">
-                    <button onClick={() => handleModifyEvent(event)}>Modificar</button>
-                    <button onClick={() => confirmAction('deleteEvent', event)}>Eliminar</button>
-                  </div>
-                </li>
-              ))}
-            </ul>
+            <table className="events-table">
+              <thead>
+                <tr>
+                  <th>Título</th>
+                  <th>Descripción</th>
+                  <th>Fecha de Inicio</th>
+                  <th>Fecha Final</th>
+                  <th>Imagen</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {events.map((event) => (
+                  <tr key={event.id}>
+                    <td>{event.Nombre}</td>
+                    <td>{event.Descripcion}</td>
+                    <td>
+                      {event.Comienza && !isNaN(new Date(event.Comienza))
+                        ? format(new Date(event.Comienza), 'dd/MM/yyyy')
+                        : 'Fecha no válida'}
+                    </td>
+                    <td>
+                      {event.Termina && !isNaN(new Date(event.Termina))
+                        ? format(new Date(event.Termina), 'dd/MM/yyyy')
+                        : 'Fecha no válida'}
+                    </td>
+                    <td>
+                      {event.imageUrl && <img src={event.imageUrl} alt={event.title} className="event-image" />}
+                    </td>
+                    <td className="event-actions">
+                      <button className="modify-button" onClick={() => handleModifyEvent(event)}>Modificar</button>
+                      <button className="delete-button" onClick={() => confirmAction('deleteEvent', event)}>Eliminar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
         {activeTab === 'content' && (
           <div>
+            <h2>Crear Lugar</h2>
+            <form onSubmit={handleCreatePlace} className="create-place-form">
+              <input
+                type="text"
+                placeholder="Nombre del Lugar"
+                value={newPlace.nombre}
+                onChange={(e) => setNewPlace({ ...newPlace, nombre: e.target.value })}
+                required
+              />
+              <textarea
+                placeholder="Descripción"
+                value={newPlace.descripcion}
+                onChange={(e) => setNewPlace({ ...newPlace, descripcion: e.target.value })}
+                required
+              ></textarea>
+              <select
+                value={newPlace.municipio}
+                onChange={(e) => setNewPlace({ ...newPlace, municipio: e.target.value })}
+                required
+              >
+                <option value="">Seleccione un Municipio</option>
+                <option value="Rionegro">Rionegro</option>
+                <option value="La Ceja">La Ceja</option>
+                <option value="El Retiro">El Retiro</option>
+                <option value="El Carmen">El Carmen</option>
+                <option value="La Union">La Union</option>
+              </select>
+              
+              {/* Campo para seleccionar archivo */}
+              <input
+                type="file"
+                onChange={(e) => setSelectedFile(e.target.files[0])} // Guarda el archivo seleccionado
+                required
+              />
+              
+              <button type="submit">Crear Lugar</button>
+            </form>
+
+
             <h2>Gestión de Contenido</h2>
-            <ul>
-              {content.map(item => (
-                <li key={item.id}>
-                  {item.name} - {item.description}
-                  <button onClick={() => confirmAction('deleteContent', item)}>Eliminar</button>
-                </li>
-              ))}
-            </ul>
+            <table>
+              <thead>
+                <tr>
+                  <th>Nombre</th>
+                  <th>Descripción</th>
+                  <th>Municipio</th>
+                  <th>Acciones</th>
+                </tr>
+              </thead>
+              <tbody>
+                {places.map(place => (
+                  <tr key={place.id}>
+                    <td>{place.Nombre}</td>
+                    <td>{place.Descripcion}</td>
+                    <td>{place.Municipio}</td>
+                    <td>
+                      <button className="delete-button" onClick={() => confirmAction('deleteContent', place)}>Eliminar</button>
+                    </td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
         )}
-        {activeTab === 'comments' && (
-          <div>
-            <h2>Comentarios</h2>
-            <ul>
-            {comments.map(comment => (
-              <li key={comment.id}>
-                {comment.author}: {comment.content}
-                <button onClick={() => handleDeleteComment(comment.id, comment.uuid_ubicacion)}>
-                  Eliminar Comentario
-                </button>
-              </li>
-            ))}
-            </ul>
-          </div>
-        )}
+
       </div>
 
       {isDialogOpen && (
-        <div className="dialog">
-          <p>¿Estás seguro de que deseas eliminar este ítem?</p>
-          <button onClick={executeAction}>Sí</button>
-          <button onClick={() => setIsDialogOpen(false)}>No</button>
+        <div className="dialog-overlay">
+          <div className="dialog">
+            <p>¿Estás seguro de que deseas eliminar este ítem?</p>
+            <button onClick={executeAction}>Sí</button>
+            <button onClick={() => setIsDialogOpen(false)}>No</button>
+          </div>
         </div>
       )}
+
     </div>
   );
 }

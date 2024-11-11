@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import '../styles/Header.css';
+import { jwtDecode } from 'jwt-decode';
 import Logo from '../styles/images/Logo.png';
 
 const Header = () => {
@@ -9,35 +10,47 @@ const Header = () => {
   const [rol, setUserRole] = useState(null); // Estado para almacenar el rol
   const navigate = useNavigate();
 
-  const checkAuth = () => {
+  const checkAuth = async () => {
     const token = localStorage.getItem('authToken');
-    const rol = localStorage.getItem('rol'); // Obtén el rol del usuario
-    setIsAuthenticated(!!token);
-    setUserRole(rol); // Guarda el rol
-  };
+    console.log('Token:', token);
 
+    if (token) {
+      try {
+        // Decodifica el JWT para extraer la información
+        const decodedToken = jwtDecode(token);
+        console.log('Decoded Token:', decodedToken);
+
+        // Verifica si el token contiene el rol
+        const userRole = decodedToken.rol; // Asume que 'rol' está en el token
+
+        if (userRole) {
+          setIsAuthenticated(true);
+          setUserRole(userRole); // Establece el rol desde el token
+        } else {
+          setIsAuthenticated(false);
+          setUserRole(null);
+        }
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        setIsAuthenticated(false);
+        setUserRole(null);
+      }
+    } else {
+      setIsAuthenticated(false);
+      setUserRole(null);
+    }
+  };
+  
   useEffect(() => {
     checkAuth();
-  }, []);
-
-  useEffect(() => {
-    const handleStorageChange = () => {
-      checkAuth();
-    };
-
-    window.addEventListener('storage', handleStorageChange);
-
-    return () => {
-      window.removeEventListener('storage', handleStorageChange);
-    };
   }, []);
 
   const handleLogout = () => {
     localStorage.removeItem('authToken');
-    localStorage.removeItem('rol'); // También eliminar el rol al hacer logout
     checkAuth();
     navigate('/');
   };
+
 
   // Inicializa Google Translate cuando el script se carga
   useEffect(() => {
@@ -97,23 +110,23 @@ const Header = () => {
                 <li><button onClick={() => handleLanguageChange('fr')}>Français</button></li>
               </ul>
             </li>
+
+            {isAuthenticated && rol === 'admin' && (
+              <div className="admin-menu">
+                <Link to="/dashboard" className="dashboard-button">
+                  Dashboard
+                </Link>
+              </div>
+            )}
+
+            {isAuthenticated && (
+              <div className="user-menu">
+                <button className="logout-button" onClick={handleLogout}>
+                  Cerrar sesión
+                </button>
+              </div>
+            )}
           </ul>
-
-          {isAuthenticated && rol === 'admin' && (
-            <div className="admin-menu">
-              <Link to="/dashboard" className="dashboard-button">
-                Dashboard
-              </Link>
-            </div>
-          )}
-
-          {isAuthenticated && (
-            <div className="user-menu">
-              <button className="logout-button" onClick={handleLogout}>
-                Cerrar sesión
-              </button>
-            </div>
-          )}
         </nav>
         {/* Div para Google Translate */}
         <div id="google_translate_element" style={{ display: 'none' }}></div>

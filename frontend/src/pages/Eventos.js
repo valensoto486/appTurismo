@@ -129,7 +129,7 @@ function Eventos() {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/80 to-transparent flex flex-col justify-end p-6">
-                    <h2 className="text-2xl font-bold mb-2" style={{color:'rgb(1, 70, 1)'}}>{evento.Nombre}</h2>
+                    <h2 className="text-2xl font-bold mb-2" style={{color:'white', padding:20}}>{evento.Nombre}</h2>
                     <p className="line-clamp-2"
                     style={{paddingTop:'10px'}}>{evento.Descripcion}</p>
                     <div className="flex items-center gap-2 text-sm  mt-2">
@@ -163,10 +163,10 @@ function Eventos() {
               <img
                 src={selectedEvent.imageUrl || '/placeholder.svg'}
                 alt={selectedEvent.Nombre}
-                className="w-full h-64 object-cover"
+                className="w-full h-64 object-cover" 
               />
               <div className="p-6">
-                <h2 className="text-3xl font-bold mb-4" style={{color:'white'}}>{selectedEvent.Nombre}</h2>
+                <div className="text-3xl font-bold mb-4 text-white p-4">{selectedEvent.Nombre}</div>
                 <p className=" mb-4" style={{color:'rgb(189, 247, 189)'}}>{selectedEvent.Descripcion}</p>
                 <div className="flex items-center gap-2 text-sm mb-2" style={{paddingTop:'20px'}}>
                   <CalendarDays className="h-4 w-4" />

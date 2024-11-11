@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
+import { jwtDecode } from 'jwt-decode';
 import { ChevronDown, ChevronUp, Search, Hotel, Utensils, Camera } from 'lucide-react';
 import '../styles/TurismPage.css'; // Asegúrate de incluir tus estilos CSS
 
@@ -15,9 +16,12 @@ const TourismPage = ({ municipio }) => {
     Restaurantes: false,
     Atracciones: false
   });
+  const [rol, setUserRole] = useState(null); 
   const navigate = useNavigate();
+  const [isAuthenticated, setIsAuthenticated] = useState(false);
 
   useEffect(() => {
+    checkAuth();
     const fetchPlaces = async () => {
       try {
         setLoading(true);
@@ -77,6 +81,37 @@ const TourismPage = ({ municipio }) => {
     navigate('/placedetails', { state: { place } });
   };
 
+  const checkAuth = async () => {
+    const token = localStorage.getItem('authToken');
+    console.log('Token:', token);
+
+    if (token) {
+      try {
+        // Decodifica el JWT para extraer la información
+        const decodedToken = jwtDecode(token);
+        console.log('Decoded Token:', decodedToken);
+
+        // Verifica si el token contiene el rol
+        const userRole = decodedToken.rol;
+
+        if (userRole) {
+          setIsAuthenticated(true);
+          setUserRole(userRole); // Establece el rol desde el token
+        } else {
+          setIsAuthenticated(false);
+          setUserRole(null);
+        }
+      } catch (error) {
+        console.error('Error al decodificar el token:', error);
+        setIsAuthenticated(false);
+        setUserRole(null);
+      }
+    } else {
+      setIsAuthenticated(false);
+      setUserRole(null);
+    }
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br ">
       <div className="container mx-auto px-4 py-12">
@@ -88,6 +123,16 @@ const TourismPage = ({ municipio }) => {
         >
           Descubre {municipio}
         </motion.h1>
+
+        {isAuthenticated && rol === 'anfitrion' || isAuthenticated && rol === 'admin' && (
+          <button 
+            onClick={() => navigate('/add-place')} 
+            className=" text-white py-2 px-4 rounded-full mb-8"
+            style={{backgroundColor:"rgba(1, 70, 1, 0.692)"}}
+          >
+            Agregar Lugar
+          </button>
+        )}
 
         <motion.div 
           className="bg-white bg-opacity-20 backdrop-filter backdrop-blur-lg rounded-xl shadow-2xl p-8 mb-12"

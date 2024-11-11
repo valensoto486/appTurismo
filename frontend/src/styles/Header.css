@@ -95,7 +95,7 @@
   .nav-menu {
     display: none;
     flex-direction: column;
-    position: absolute;
+    position: center;
     top: 100%;
     left: 0;
     right: 0;
@@ -148,4 +148,9 @@
 
 .dropdown-item:hover {
   background-color: #f0f0f0;
+}
+
+.admin-menu {
+  padding-left: 15px;
+  padding-right: 15px;
 }
