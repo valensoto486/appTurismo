@@ -8,6 +8,7 @@ const AddPlace = () => {
     Tipo: '',
     Latitud: '',
     Longitud: '',
+    Municipio: '',
     URLImagen: null,
   });
   const [loading, setLoading] = useState(false);
@@ -40,6 +41,7 @@ const AddPlace = () => {
     formData.append('Tipo', placeData.Tipo);
     formData.append('Latitud', placeData.Latitud);
     formData.append('Longitud', placeData.Longitud);
+    formData.append('Municipio', placeData.Municipio);
     if (placeData.URLImagen) {
       formData.append('URLImagen', placeData.URLImagen);
     }
@@ -67,7 +69,7 @@ const AddPlace = () => {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-100">
+    <div className="min-h-screen flex items-center justify-center bg-cover bg-gray-100">
       <div className="bg-white p-8 rounded-lg shadow-lg max-w-md w-full">
         <h1 className="text-2xl font-bold mb-6 text-center">Agregar Lugar</h1>
         {error && <p className="text-red-500">{error}</p>}
@@ -107,6 +109,23 @@ const AddPlace = () => {
               <option value="Hotel">Hotel</option>
               <option value="Restaurante">Restaurante</option>
               <option value="Atracción">Atracción</option>
+            </select>
+          </div>
+          <div className="mb-4">
+            <label className="block text-gray-700">Municipio</label>
+            <select
+              name="Municipio"
+              value={placeData.Municipio}
+              onChange={handleChange}
+              className="w-full px-4 py-2 border rounded-lg focus:outline-none"
+              required
+            >
+              <option value="">Seleccionar Municipio</option>
+              <option value="Rionegro">Rionegro</option>
+              <option value="La Ceja">La Ceja</option>
+              <option value="La Union">La Union</option>
+              <option value="El Retiro">El Retiro</option>
+              <option value="El Carmen">El Carmen</option>
             </select>
           </div>
           <div className="mb-4">

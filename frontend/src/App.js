@@ -38,6 +38,7 @@ function App() {
           <Route path="/dashboard" element={<Dashboard />} />
           <Route path="/placedetails" element={<PlaceDetails />} />
           <Route path="/add-place" element={<AddPlace />} />
+
         </Routes>
         <Footer />
       </div>

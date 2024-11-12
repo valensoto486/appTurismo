@@ -202,23 +202,32 @@ export default function Dashboard() {
     }
   };
 
-  const handleDeleteEvent = async (uuid) => {
+  const handleDeleteEvent = async (Id) => {
+    console.log("Eliminando evento con ID:", Id);
+    if (!Id) {
+      console.error("El UUID no es válido:", Id);
+      alert("No se puede eliminar el evento, ID no válido.");
+      return; // Salir si el UUID es inválido
+    }
     const token = localStorage.getItem("authToken");
     const decodedToken = jwtDecode(token);
     console.log('Decoded Token:', decodedToken)
+    console.log('UUID del evento:', Id); 
     try {
       
       const response = await fetch("https://eliminarevento-jkomhrg5ba-uc.a.run.app", {
         method: "DELETE",
         headers: {
-          Authorization: `Bearer `+token,
+          // Authorization: `Bearer `+token,
           "Content-Type": "application/json",
         },
-        body: JSON.stringify({ uuid }),
+        body: JSON.stringify({ uuid: Id }),
       });
       const result = await response.text();
+      console.log('Respuesta del servidor:', result);
       if (response.ok) {
         alert("Evento eliminado correctamente");
+        window.location.reload();
         fetchEvents(); // Actualizar la lista de eventos
       } else {
         const errorText = await response.text(); // Leer respuesta como texto en caso de error
@@ -293,9 +302,9 @@ export default function Dashboard() {
   };
   
 
-  const confirmAction = (action, place) => {
-    console.log("Item recibido en confirmAction:", place);
-    setSelectedItem(place);
+  const confirmAction = (action, event) => {
+    console.log("Item recibido en confirmAction:", event);
+    setSelectedItem(event );
     setDialogAction(action);
     setIsDialogOpen(true);
   };
@@ -303,7 +312,7 @@ export default function Dashboard() {
   const executeAction = () => {
     switch (dialogAction) {
       case 'deleteEvent':
-        handleDeleteEvent(selectedItem.uuid);
+        handleDeleteEvent(selectedItem.Id);
         break;
       case 'deleteContent':
         handleDeleteContent(selectedItem.uuid_lugar, selectedItem.uuid_recurso);
@@ -384,17 +393,17 @@ export default function Dashboard() {
               </thead>
               <tbody>
                 {events.map((event) => (
-                  <tr key={event.id}>
+                  <tr key={event.Id}>
                     <td>{event.Nombre}</td>
                     <td>{event.Descripcion}</td>
                     <td>
                       {event.Comienza && !isNaN(new Date(event.Comienza))
-                        ? format(new Date(event.Comienza), 'dd/MM/yyyy')
+                        ? format(new Date(event.Comienza), 'MM/dd/yyyy')
                         : 'Fecha no válida'}
                     </td>
                     <td>
                       {event.Termina && !isNaN(new Date(event.Termina))
-                        ? format(new Date(event.Termina), 'dd/MM/yyyy')
+                        ? format(new Date(event.Termina), 'MM/dd/yyyy')
                         : 'Fecha no válida'}
                     </td>
                     <td>

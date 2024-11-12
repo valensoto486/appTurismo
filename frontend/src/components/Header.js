@@ -21,7 +21,7 @@ const Header = () => {
         console.log('Decoded Token:', decodedToken);
 
         // Verifica si el token contiene el rol
-        const userRole = decodedToken.rol; // Asume que 'rol' está en el token
+        const userRole = decodedToken.rol;
 
         if (userRole) {
           setIsAuthenticated(true);
